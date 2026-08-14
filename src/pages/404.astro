@@ -1,0 +1,21 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Page not found — Atelier Kō" description="The page you're looking for doesn't exist or has been moved." noindex={true} includeHeader={false} includeFooter={false}>
+  <main id="main-content" class="flex min-h-screen items-center justify-center bg-base px-4">
+    <div class="max-w-md text-center">
+      <h1 class="font-serif text-7xl">404</h1>
+      <h2 class="mt-4 font-serif text-2xl">Page not found</h2>
+      <p class="mt-2 text-sm text-faded">The page you're looking for doesn't exist or has been moved.</p>
+      <div class="mt-6">
+        <a
+          href="/catalog"
+          class="inline-flex items-center justify-center rounded-full bg-ink px-5 py-3 text-xs uppercase tracking-widest text-[var(--color-base)] transition-colors hover:bg-accent"
+        >
+          Back to the catalogue
+        </a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>

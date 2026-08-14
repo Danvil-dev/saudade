@@ -1,0 +1,346 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { formatPrice, getProducts, productForJson } from "@/data/products.js";
+
+const products = await getProducts();
+const cartProducts = products.map(productForJson);
+---
+
+<BaseLayout
+  title="Your archive — Atelier Kō"
+  description="Review the pieces you've selected from the Atelier Kō catalogue."
+  noindex={true}
+>
+  <main id="main-content" class="mx-auto max-w-screen-xl px-6 py-12">
+    <header class="mb-12 flex items-end justify-between border-b border-line pb-8">
+      <div class="space-y-3">
+        <p class="text-xs uppercase tracking-[0.25em] text-faded">Your archive</p>
+        <h1 class="font-serif text-5xl leading-none md:text-6xl" data-cart-title>Empty for now.</h1>
+      </div>
+      <div class="hidden gap-8 text-[11px] uppercase tracking-[0.2em] md:flex">
+        <span data-cart-step="cart" class="text-ink">01 · Selection</span>
+        <span data-cart-step="details" class="text-faded">02 · Details</span>
+        <span class="text-faded">03 · Confirmation</span>
+      </div>
+    </header>
+
+    <div class="py-32 text-center" data-cart-empty>
+      <div class="space-y-6">
+        <p class="mx-auto max-w-md text-faded">
+          You haven't added any pieces yet. The catalogue is small, slow, and waiting.
+        </p>
+        <a
+          href="/catalog"
+          class="inline-block rounded-full bg-ink px-6 py-3 text-xs uppercase tracking-widest text-[var(--color-base)] transition-colors hover:bg-accent"
+        >
+          Browse the catalogue
+        </a>
+      </div>
+    </div>
+
+    <div class="hidden grid grid-cols-1 items-start gap-16 lg:grid-cols-12" data-cart-filled>
+      <section class="space-y-2 lg:col-span-7" aria-live="polite">
+        <ul class="divide-y divide-line border-y border-line" data-cart-list></ul>
+
+        <form
+          id="checkout-form"
+          class="hidden space-y-10"
+          data-checkout-form
+        >
+          <fieldset class="space-y-4">
+            <legend class="mb-2 text-xs uppercase tracking-[0.25em] text-faded">Contact</legend>
+            <label class="block">
+              <span class="text-[11px] uppercase tracking-widest text-faded">Email</span>
+              <input
+                type="email"
+                required
+                placeholder="you@example.com"
+                class="mt-1 w-full border-b border-line bg-transparent py-2 text-sm transition-colors focus:border-ink focus:outline-none"
+              />
+            </label>
+          </fieldset>
+
+          <fieldset class="space-y-4">
+            <legend class="mb-2 text-xs uppercase tracking-[0.25em] text-faded">Delivery</legend>
+            <div class="grid grid-cols-2 gap-4">
+              <label class="block">
+                <span class="text-[11px] uppercase tracking-widest text-faded">First name</span>
+                <input required placeholder="Astrid" class="mt-1 w-full border-b border-line bg-transparent py-2 text-sm transition-colors focus:border-ink focus:outline-none" />
+              </label>
+              <label class="block">
+                <span class="text-[11px] uppercase tracking-widest text-faded">Last name</span>
+                <input required placeholder="Lindgren" class="mt-1 w-full border-b border-line bg-transparent py-2 text-sm transition-colors focus:border-ink focus:outline-none" />
+              </label>
+            </div>
+            <label class="block">
+              <span class="text-[11px] uppercase tracking-widest text-faded">Address</span>
+              <input required placeholder="Storgatan 12" class="mt-1 w-full border-b border-line bg-transparent py-2 text-sm transition-colors focus:border-ink focus:outline-none" />
+            </label>
+            <div class="grid grid-cols-2 gap-4">
+              <label class="block">
+                <span class="text-[11px] uppercase tracking-widest text-faded">City</span>
+                <input required placeholder="Växjö" class="mt-1 w-full border-b border-line bg-transparent py-2 text-sm transition-colors focus:border-ink focus:outline-none" />
+              </label>
+              <label class="block">
+                <span class="text-[11px] uppercase tracking-widest text-faded">Postcode</span>
+                <input required placeholder="352 31" class="mt-1 w-full border-b border-line bg-transparent py-2 text-sm transition-colors focus:border-ink focus:outline-none" />
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="space-y-4">
+            <legend class="mb-2 text-xs uppercase tracking-[0.25em] text-faded">Payment</legend>
+            <label class="block">
+              <span class="text-[11px] uppercase tracking-widest text-faded">Card number</span>
+              <input
+                required
+                inputmode="numeric"
+                autocomplete="cc-number"
+                placeholder="4242 4242 4242 4242"
+                maxlength="19"
+                data-card-number
+                class="mt-1 w-full border-b border-line bg-transparent py-2 text-sm transition-colors focus:border-ink focus:outline-none"
+              />
+            </label>
+            <div class="grid grid-cols-2 gap-4">
+              <label class="block">
+                <span class="text-[11px] uppercase tracking-widest text-faded">Expiry</span>
+                <input
+                  required
+                  inputmode="numeric"
+                  autocomplete="cc-exp"
+                  placeholder="08 / 28"
+                  maxlength="7"
+                  data-card-expiry
+                  class="mt-1 w-full border-b border-line bg-transparent py-2 text-sm transition-colors focus:border-ink focus:outline-none"
+                />
+              </label>
+              <label class="block">
+                <span class="text-[11px] uppercase tracking-widest text-faded">CVC</span>
+                <input
+                  required
+                  inputmode="numeric"
+                  autocomplete="cc-csc"
+                  placeholder="123"
+                  maxlength="3"
+                  data-card-cvc
+                  class="mt-1 w-full border-b border-line bg-transparent py-2 text-sm transition-colors focus:border-ink focus:outline-none"
+                />
+              </label>
+            </div>
+          </fieldset>
+        </form>
+      </section>
+
+      <aside class="space-y-8 rounded-[min(1vw,12px)] bg-paper p-8 lg:sticky lg:top-24 lg:col-span-5">
+        <h2 class="text-xs uppercase tracking-[0.25em] text-faded">Order summary</h2>
+        <div class="space-y-3">
+          <div class="flex justify-between text-sm">
+            <span class="text-faded">Subtotal</span>
+            <span class="tabular-nums" data-cart-subtotal>$0</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-faded">White-glove delivery</span>
+            <span class="tabular-nums" data-cart-shipping>$0</span>
+          </div>
+          <div class="flex items-baseline justify-between border-t border-line pt-3">
+            <span class="text-sm">Total</span>
+            <span class="font-serif text-3xl tabular-nums" data-cart-total>$0</span>
+          </div>
+        </div>
+        <div class="space-y-3">
+          <button
+            type="button"
+            class="w-full rounded-full bg-ink py-4 text-sm font-medium text-[var(--color-base)] transition-colors hover:bg-accent"
+            data-cart-primary
+          >
+            Continue to details
+          </button>
+          <button
+            type="button"
+            class="hidden w-full text-[11px] uppercase tracking-widest text-faded underline underline-offset-4 transition-colors hover:text-ink"
+            data-cart-back
+          >
+            Back to selection
+          </button>
+        </div>
+        <p class="border-t border-line pt-6 text-[11px] leading-relaxed text-faded">
+          Each piece is signed and dated. Pieces are wrapped in unbleached cotton and shipped in reusable wooden crates. Returned crates earn a small credit toward your next order.
+        </p>
+      </aside>
+    </div>
+
+    {
+      products.map((product) => (
+        <template data-product-template={product.slug}>
+          <li class="flex gap-6 py-8" data-cart-row={product.slug}>
+            <a href={`/products/${product.slug}`} class="block size-28 shrink-0 overflow-hidden rounded-[min(1vw,12px)] bg-paper md:size-32">
+              <Image src={product.images[0]} alt={product.name} width={320} height={320} format="webp" loading="eager" class="h-full w-full object-cover" />
+            </a>
+            <div class="flex min-w-0 flex-1 flex-col justify-between">
+              <div class="flex justify-between gap-4">
+                <div class="min-w-0 space-y-1">
+                  <a href={`/products/${product.slug}`} class="block font-serif text-2xl transition-colors hover:text-accent">
+                    {product.name}
+                  </a>
+                  <p class="text-xs text-faded">{product.material} · {product.finish}</p>
+                  <p class="text-[11px] uppercase tracking-widest text-faded">Lead time {product.leadTime}</p>
+                </div>
+                <span class="whitespace-nowrap text-sm tabular-nums" data-row-line-price>{formatPrice(product.price)}</span>
+              </div>
+              <div class="flex items-center justify-between pt-4">
+                <div class="inline-flex items-center overflow-hidden rounded-full border border-line">
+                  <button
+                    type="button"
+                    class="grid size-8 place-items-center text-sm transition-colors hover:bg-paper"
+                    data-cart-action="decrease"
+                    aria-label={`Decrease ${product.name} quantity`}
+                  >
+                    −
+                  </button>
+                  <span class="w-8 text-center text-sm tabular-nums" data-row-quantity>1</span>
+                  <button
+                    type="button"
+                    class="grid size-8 place-items-center text-sm transition-colors hover:bg-paper"
+                    data-cart-action="increase"
+                    aria-label={`Increase ${product.name} quantity`}
+                  >
+                    +
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  class="text-[11px] uppercase tracking-widest text-faded underline underline-offset-4 hover:text-ink"
+                  data-cart-action="remove"
+                  aria-label={`Remove ${product.name} from cart`}
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </li>
+        </template>
+      ))
+    }
+  </main>
+
+  <script is:inline type="application/json" id="cart-products" set:html={JSON.stringify(cartProducts)}></script>
+
+  <script is:inline>
+    const productList = JSON.parse(document.getElementById("cart-products").textContent);
+    const productsBySlug = new Map(productList.map((product) => [product.slug, product]));
+    const formatPrice = (value) =>
+      new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0,
+      }).format(value);
+
+    const title = document.querySelector("[data-cart-title]");
+    const empty = document.querySelector("[data-cart-empty]");
+    const filled = document.querySelector("[data-cart-filled]");
+    const list = document.querySelector("[data-cart-list]");
+    const form = document.querySelector("[data-checkout-form]");
+    const primary = document.querySelector("[data-cart-primary]");
+    const back = document.querySelector("[data-cart-back]");
+    const subtotalNode = document.querySelector("[data-cart-subtotal]");
+    const shippingNode = document.querySelector("[data-cart-shipping]");
+    const totalNode = document.querySelector("[data-cart-total]");
+    const stepCart = document.querySelector('[data-cart-step="cart"]');
+    const stepDetails = document.querySelector('[data-cart-step="details"]');
+    const cardNumber = document.querySelector("[data-card-number]");
+    const cardExpiry = document.querySelector("[data-card-expiry]");
+    const cardCvc = document.querySelector("[data-card-cvc]");
+    let step = "cart";
+
+    function digitsOnly(value, maxLength) {
+      return value.replace(/\D/g, "").slice(0, maxLength);
+    }
+
+    function formatCardNumber(value) {
+      return digitsOnly(value, 16).replace(/(.{4})/g, "$1 ").trim();
+    }
+
+    function formatExpiry(value) {
+      const digits = digitsOnly(value, 4);
+      if (digits.length <= 2) return digits;
+      return `${digits.slice(0, 2)} / ${digits.slice(2)}`;
+    }
+
+    function knownRows() {
+      return window.AtelierCart.read()
+        .map((item) => ({ item, product: productsBySlug.get(item.slug) }))
+        .filter((row) => row.product);
+    }
+
+    function render() {
+      const rows = knownRows();
+      const subtotal = rows.reduce((total, row) => total + row.product.price * row.item.quantity, 0);
+      const shipping = rows.length > 0 ? 120 : 0;
+      const total = subtotal + shipping;
+
+      if (rows.length === 0) step = "cart";
+
+      title.textContent = rows.length === 0 ? "Empty for now." : step === "cart" ? "Review your selection." : "A few details.";
+      empty.classList.toggle("hidden", rows.length !== 0);
+      filled.classList.toggle("hidden", rows.length === 0);
+      list.classList.toggle("hidden", step !== "cart");
+      form.classList.toggle("hidden", step !== "details");
+      primary.textContent = step === "cart" ? "Continue to details" : `Reserve · ${formatPrice(total)}`;
+      back.classList.toggle("hidden", step !== "details");
+      stepCart.className = step === "cart" ? "text-ink" : "text-faded";
+      stepDetails.className = step === "details" ? "text-ink" : "text-faded";
+
+      subtotalNode.textContent = formatPrice(subtotal);
+      shippingNode.textContent = formatPrice(shipping);
+      totalNode.textContent = formatPrice(total);
+
+      list.replaceChildren();
+      rows.forEach(({ item, product }) => {
+        const template = document.querySelector(`template[data-product-template="${item.slug}"]`);
+        const row = template.content.firstElementChild.cloneNode(true);
+        row.querySelector("[data-row-quantity]").textContent = String(item.quantity);
+        row.querySelector("[data-row-line-price]").textContent = formatPrice(product.price * item.quantity);
+        row.querySelector('[data-cart-action="decrease"]').addEventListener("click", () => window.AtelierCart.setQuantity(item.slug, item.quantity - 1));
+        row.querySelector('[data-cart-action="increase"]').addEventListener("click", () => window.AtelierCart.setQuantity(item.slug, item.quantity + 1));
+        row.querySelector('[data-cart-action="remove"]').addEventListener("click", () => window.AtelierCart.remove(item.slug));
+        list.appendChild(row);
+      });
+    }
+
+    primary.addEventListener("click", () => {
+      if (step === "cart") {
+        step = "details";
+        render();
+        return;
+      }
+      form.requestSubmit();
+    });
+
+    back.addEventListener("click", () => {
+      step = "cart";
+      render();
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      alert("Checkout is a design preview — payment is not connected.");
+    });
+
+    cardNumber.addEventListener("input", () => {
+      cardNumber.value = formatCardNumber(cardNumber.value);
+    });
+
+    cardExpiry.addEventListener("input", () => {
+      cardExpiry.value = formatExpiry(cardExpiry.value);
+    });
+
+    cardCvc.addEventListener("input", () => {
+      cardCvc.value = digitsOnly(cardCvc.value, 3);
+    });
+
+    document.addEventListener("atelier-cart-change", render);
+    render();
+  </script>
+</BaseLayout>
