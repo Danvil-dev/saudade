@@ -69,7 +69,6 @@ if (Astro.request.method === "POST")
         return Astro.redirect(`/admin/productsManagement?page=${currentPage}`);
       }
     } else {
-        
       const name = formData.get("name")?.toString() || "";
       const description = formData.get("description")?.toString() || "";
       const category = formData.get("category")?.toString() || "";
@@ -348,3 +347,25 @@ if (Astro.request.method === "POST")
     width: 90% !important;
   }
 </style>
+<script>
+  // Escuchamos el envío de cualquier formulario en la página
+  document.querySelectorAll("form").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+
+      // Si el usuario cancela la confirmación, no hacemos nada
+      if (event.defaultPrevented) return;
+
+      const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+
+      if (submitButton) {
+        // Desactivamos el botón para evitar más pulsaciones
+        submitButton.disabled = true;
+
+        // Opcional: Cambiamos el estilo y texto para dar feedback visual
+        submitButton.dataset.originalText = submitButton.innerText;
+        submitButton.innerText = "Guardando...";
+        submitButton.classList.add("opacity-50", "cursor-not-allowed");
+      }
+    });
+  });
+</script>
