@@ -44,11 +44,11 @@ export interface Product {
   name: string;
   description: string;
   category: string;
-  image: File;
+  image?: string | null;
   price: number;
 }
 
-export const createProduct = async (product: Product, imageFile?: File) => {
+export const createProduct = async (supabaseClient: any, product: Product, imageFile?: File) => {
   let imageURL: string | null = null;
 
   //  Subimos la imagen
@@ -57,7 +57,7 @@ export const createProduct = async (product: Product, imageFile?: File) => {
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExtension}`;
     const filePath = `items/${fileName}`;
 
-    const { error: storageError } = await supabase.storage
+    const { error: storageError } = await supabaseClient.storage
       .from("products-images")
       .upload(filePath, imageFile);
 
@@ -67,13 +67,13 @@ export const createProduct = async (product: Product, imageFile?: File) => {
     }
 
     // Conseguimos la URL pública
-    const { data: urlData } = supabase.storage.from("products-images").getPublicUrl(filePath);
+    const { data: urlData } = supabaseClient.storage.from("products-images").getPublicUrl(filePath);
 
     imageURL = urlData.publicUrl;
   }
 
   // Añadimos el producto en la bbdd
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from("products")
     .insert([
       {
@@ -94,8 +94,8 @@ export const createProduct = async (product: Product, imageFile?: File) => {
   return { success: true, data };
 };
 
-export const editProduct = async (productId: number, fields: Partial<Product>) => {
-  const { data, error } = await supabase
+export const editProduct = async (supabaseClient: any, productId: number, fields: Partial<Product>) => {
+  const { data, error } = await supabaseClient
     .from("products")
     .update(fields)
     .eq("id", productId)
@@ -109,8 +109,12 @@ export const editProduct = async (productId: number, fields: Partial<Product>) =
   return { success: true, data };
 };
 
-export const deleteProduct = async (productId: number) => {
-  const { data, error } = await supabase.from("products").delete().eq("id", productId).select();
+export const deleteProduct = async (supabaseClient: any, productId: number) => {
+  const { data, error } = await supabaseClient
+    .from("products")
+    .delete()
+    .eq("id", productId)
+    .select();
 
   if (error) {
     console.error("Error al eliminar el producto: ", error.message);
