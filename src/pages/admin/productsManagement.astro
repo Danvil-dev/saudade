@@ -1,0 +1,147 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getSupabaseServer } from "@/db/supabaseServer";
+import { getProducts } from "@/db/dbFunctions";
+import { Modal } from "accessible-astro-components";
+
+export const prerender = false;
+const supabase = getSupabaseServer(Astro);
+const {
+  data: { user },
+  error,
+} = await supabase.auth.getUser();
+
+if (!user || error) {
+  return Astro.redirect("/login");
+}
+
+const PAGE_SIZE = 10; // 10 productos por página
+const pageParams = Astro.url.searchParams.get("page"); // Conseguimos de la URL la página en la que estamos
+const currentPage = Math.max(1, Number(pageParams) || 1); // Calculamos la página actual
+
+const from = (currentPage - 1) * PAGE_SIZE; // Desde donde
+const to = from + PAGE_SIZE - 1; // Hasta donde
+
+// Cogemos los datos de supabase en el rango que hemos calculado (desde donde, hasta donde)
+const { data: products, count } = await supabase
+  .from("products")
+  .select("*", { count: "exact" })
+  .range(from, to);
+
+const totalProducts = count || 0; // Calculamos el total de productos que hay
+const totalPages = Math.ceil(totalProducts / PAGE_SIZE) || 1; // Calculamos el total de paginas que hay
+const maxPage = Math.max(1, totalPages);
+
+if (Number(pageParams) > totalPages)
+  return Astro.redirect(`/admin/productsManagement?page=${maxPage}`);
+
+// Logica para el modal
+const idModalCrear = "modalCrear";
+---
+
+<BaseLayout>
+  <div class="max-w my-10">
+    <div class="flex flex-row justify-around items-center">
+      <h2>
+        {
+          totalProducts > 0
+            ? `Total: ${totalProducts} ${totalProducts > 1 ? "productos" : "producto"}`
+            : "Aún no hay productos"
+        }
+      </h2>
+      <button class="bg-black hover:bg-gray-500 p-2 text-white rounded-sm" id="modalCrear"
+        >&plus; Añadir producto</button
+      >
+    </div>
+    <div
+      class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default my-5 mx-20"
+    >
+      <table class="w-full text-sm text-left rtl:text-right text-body">
+        <thead
+          class="text-sm text-body bg-neutral-secondary-soft border-b rounded-base border-default"
+        >
+          <tr>
+            <th scope="col" class="px-6 py-3 font-medium"> Id del producto </th>
+            <th scope="col" class="px-6 py-3 font-medium"> Nombre </th>
+            <th scope="col" class="px-6 py-3 font-medium"> Descripcion </th>
+            <th scope="col" class="px-6 py-3 font-medium"> Categoria </th>
+            <th scope="col" class="px-6 py-3 font-medium"> Imagen </th>
+            <th scope="col" class="px-6 py-3 font-medium"> Precio </th>
+            <th scope="col" class="px-6 py-3 font-medium"> Opciones </th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            (products || []).map((product) => (
+              <tr class="bg-neutral-primary border-b border-default">
+                <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
+                  {product.id}
+                </th>
+                <td class="px-6 py-4"> {product.name} </td>
+                <td class="px-6 py-4"> {product.description} </td>
+                <td class="px-6 py-4"> {product.category} </td>
+                <td class="px-6 py-4">
+                  {" "}
+                  {product.image != null ? (
+                    <img src={product.image} width="60" height="60" alt={product.name} />
+                  ) : (
+                    "No hay imagen"
+                  )}{" "}
+                </td>
+                <td class="px-6 py-4"> {product.price} € </td>
+                <td class="px-6 py-4">
+                  {" "}
+                  <div>
+                    <button class="m-1 p-2 bg-blue-400 hover:bg-blue-600 rounded-sm">Editar</button>
+                    <button class="m-1 p-2 bg-red-500 hover:bg-red-700 rounded-sm">Eliminar</button>
+                  </div>{" "}
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <div class="flex justify-between items-center px-5 my-4">
+        <a
+          href={`?page=${currentPage - 1}`}
+          class={`px-4 py-2 bg-gray-200 rounded ${currentPage <= 1 ? "pointer-events-none opacity-50" : "hover:bg-gray-300"}`}
+        >
+          &larr; Anterior
+        </a>
+
+        <span>Página <strong>{currentPage}</strong> de {totalPages}</span>
+
+        <a
+          href={`?page=${currentPage + 1}`}
+          class={`px-4 py-2 bg-gray-200 rounded ${currentPage >= totalPages ? "pointer-events-none opacity-50" : "hover:bg-gray-300"}`}
+        >
+          Siguiente &rarr;
+        </a>
+      </div>
+    </div>
+
+    <Modal class="w-[50%]" triggerId="modalCrear" title="Nuevo producto:">
+      <form action="">
+        <div class="my-2.5">
+            <label for="name">Nombre</label>
+            <input class="bg-gray-200 rounded-sm border-2" placeholder="Libreta..." type="text" name="name" />
+        </div>
+        <div class="my-2.5">
+          <label for="description">Descripcion</label>
+          <input class="bg-gray-200 rounded-sm border-2" placeholder="Libreta de color azul..." type="text" name="description" />
+        </div>
+        <div class="my-2.5">
+            <label for="Category">Categoria</label>
+            <input class="bg-gray-200 rounded-sm border-2" placeholder="Materiales" type="text" name="category" /></div>
+        <div class="my-2.5">
+            <label for="Imagen">Imagen</label>
+            <input class="bg-gray-200 rounded-sm border-2" type="file" name="imagen" /></div>
+        <div class="my-2.5">
+            <label for="price">Precio</label>
+            <input class="bg-gray-200 rounded-sm border-2" placeholder="3.99" type="number" name="precio" /></div>
+      </form>
+      <button onclick="closeModal()" class="p-2 bg-green-500 rounded-sm">Añadir producto</button
+      ></Modal
+    >
+  </div></BaseLayout
+>

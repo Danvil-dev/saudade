@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import { formatPrice, getProduct } from "@/data/products.js";
+import { getProducts } from "@/db/dbFunctions.js";
 
 const { currentPath = "/" } = Astro.props;
 
@@ -15,11 +15,11 @@ const navItems = [
   { href: "/about", label: "About" },
 ];
 
-const featuredProduct = await getProduct("oken-stool");
+// const featuredProduct = await getProducts("oken-stool");
 
-if (!featuredProduct) {
-  throw new Error("Missing required mobile menu product: oken-stool");
-}
+// if (!featuredProduct) {
+//   throw new Error("Missing required mobile menu product: oken-stool");
+// }
 ---
 
 <nav class="sticky top-0 z-50 border-b border-line bg-base/80 backdrop-blur-md" aria-label="Main navigation">
@@ -149,7 +149,7 @@ if (!featuredProduct) {
           </a>
         </div>
 
-        <a
+        <!-- <a
           href={`/products/${featuredProduct.slug}`}
           class="group block border-y border-line py-4"
           data-mobile-menu-link
@@ -175,7 +175,7 @@ if (!featuredProduct) {
               {formatPrice(featuredProduct.price)}
             </p>
           </div>
-        </a>
+        </a> -->
 
         <div class="mt-auto space-y-2 text-sm">
           <p class="text-[10px] uppercase tracking-[0.3em] text-faded">Contact</p>

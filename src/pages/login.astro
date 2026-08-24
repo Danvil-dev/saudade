@@ -1,0 +1,57 @@
+---
+export const prerender = false;
+import { supabase } from "@/db/dbFunctions";
+import { getSupabaseServer } from "@/db/supabaseServer";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+let errorMessage = "";
+const contentType = Astro.request.headers.get("content-type") || "";
+
+if (
+  Astro.request.method === "POST" &&
+  (contentType.includes("application/x-www-") || contentType.includes("multipart/form-data"))
+) {
+  const supabase = getSupabaseServer(Astro);
+  const formData = await Astro.request.formData();
+  const email = formData.get("email")?.toString();
+  const password = formData.get("password")?.toString();
+
+  if (!email || !password) {
+    errorMessage = "Por favor, completa todos los campos";
+  } else {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      errorMessage = "Correo o contraseña incorrecto";
+    } else {
+      return Astro.redirect("/admin/dashboard");
+    }
+  }
+}
+---
+
+<BaseLayout title="Iniciar Sesión">
+  <div class="max-w-md mx-auto my-12 p-6 bg-white rounded-lg shadow-md">
+    <form method="post" enctype="application/x-www-form-urlencoded">
+      <h2 class="text-2xl font-bold mb-4">Bienvenido de nuevo</h2>
+
+      {errorMessage && <p class="text-red-500 text-sm mb-4">{errorMessage}</p>}
+
+      <div class="mb-4">
+        <label for="email" class="block text-sm font-medium">Email</label>
+        <input type="email" name="email" required class="w-full p-2 border rounded mt-1" />
+      </div>
+
+      <div class="mb-6">
+        <label for="password" class="block text-sm font-medium">Password</label>
+        <input type="password" name="password" required class="w-full p-2 border rounded mt-1" />
+      </div>
+
+      <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800">
+        Acceder
+      </button>
+    </form>
+  </div>
+</BaseLayout>

@@ -1,0 +1,129 @@
+---
+import { Image } from "astro:assets";
+import ProductCard from "@/components/ProductCard.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getProducts, getRelated } from "@/db/dbFunctions.js";
+
+export async function getStaticPaths() {
+  const products = await getProducts();
+
+  // Usamos Promise.all para esperar a que todas las consultas de 'getRelated' terminen
+  return await Promise.all(
+    products.map(async (product) => {
+      let related = await getRelated(product.category);
+
+      related = related.filter((p) => p.name !== product.name);
+
+      return {
+        params: { name: product.name },
+        props: { product, related },
+      };
+    }),
+  );
+}
+
+const { product, related } = Astro.props;
+const productUrl = new URL(`/products/${product.name}`, Astro.site ?? Astro.url.origin).href;
+---
+
+<BaseLayout
+  title={`${product.name} — Saudade`}
+  description={product.description}
+  image={product.image}
+>
+  <main id="main-content">
+    <div class="mx-auto max-w-screen-xl px-6 pt-8">
+      <nav class="flex gap-2 text-xs uppercase tracking-widest text-faded" aria-label="Breadcrumb">
+        <a href="/catalog" class="hover:text-ink">Catálogo</a>
+        <span aria-hidden="true">/</span>
+        <span class="text-ink" aria-current="page">{product.name}</span>
+      </nav>
+    </div>
+
+    <div class="mx-auto max-w-screen-xl px-6 py-12">
+      <section class="grid grid-cols-1 items-start gap-16 lg:grid-cols-12">
+        <div class="space-y-6 lg:col-span-7">
+          <div class="relative aspect-[4/5] overflow-hidden rounded-[min(1vw,12px)] bg-paper">
+            <div class="absolute inset-0">
+              <Image
+                src={product.image}
+                alt={`${product.name}`}
+                width={1440}
+                height={1800}
+                format="webp"
+                loading="eager"
+                class="h-full w-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-12 lg:sticky lg:top-24 lg:col-span-5">
+          <div class="space-y-4">
+            <div class="text-xs uppercase tracking-widest text-faded">{product.category}</div>
+            <h1 class="text-balance font-serif text-4xl leading-tight md:text-5xl">
+              {product.name}
+            </h1>
+            <p class="font-serif text-2xl">{product.price} €</p>
+          </div>
+
+          <div class="space-y-6">
+            <p class="max-w-[44ch] text-pretty leading-relaxed text-faded">{product.description}</p>
+          </div>
+
+          <button
+            type="button"
+            data-add-to-cart={product.name}
+            class="w-full rounded-full bg-ink py-4 text-sm font-medium text-[var(--color-base)] ring-1 ring-ink transition-all hover:bg-accent hover:ring-accent active:scale-[0.98]"
+          >
+            Añadir al carrito
+          </button>
+        </div>
+      </section>
+
+      {
+        related.length > 0 && (
+          <section class="mt-40 space-y-12 border-t border-line pt-16">
+            <div class="flex items-end justify-between gap-6">
+              <h2 class="font-serif text-3xl md:text-4xl">Productos relacionados</h2>
+              <a
+                href="/catalog"
+                class="text-xs uppercase tracking-widest underline underline-offset-4 hover:text-accent"
+              >
+                Ver todo
+              </a>
+            </div>
+            <div class="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-3">
+              {related.map((item) => (
+                <ProductCard product={item} />
+              ))}
+            </div>
+          </section>
+        )
+      }
+    </div>
+
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Product",
+        name: product.name,
+        description: product.description,
+        image: new URL(product.image, Astro.url.origin).href,
+        brand: {
+          "@type": "Brand",
+          name: "Saudade",
+        },
+        url: productUrl,
+        offers: {
+          "@type": "Offer",
+          priceCurrency: "EUR",
+          price: product.price,
+          url: productUrl,
+        },
+      })}
+    />
+  </main>
+</BaseLayout>

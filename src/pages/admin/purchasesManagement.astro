@@ -1,0 +1,17 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getSupabaseServer } from "@/db/supabaseServer";
+
+export const prerender = false;
+const supabase = getSupabaseServer(Astro);
+const {
+  data: { user },
+  error,
+} = await supabase.auth.getUser();
+
+if (!user || error) {
+  return Astro.redirect("/login");
+}
+---
+
+<BaseLayout> Gestion de compras </BaseLayout>

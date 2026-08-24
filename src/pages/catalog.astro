@@ -1,27 +1,27 @@
 ---
 import ProductCard from "@/components/ProductCard.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { getProductFilters, getProducts } from "@/data/products.js";
+import { getProducts, getCategories } from "@/db/dbFunctions.js";
 
 const products = await getProducts();
-const { categories: allCategories, materials: allMaterials } = getProductFilters(products);
+const categories = await getCategories();
 ---
 
 <BaseLayout
-  title="The Catalogue — Atelier Kō"
-  description="Browse every piece in the Atelier Kō catalogue. Filter by category and material — solid oak, ash, walnut. Hand-built to order."
+  title="Saudade"
+  description="Papeleria de Granada"
 >
   <main id="main-content">
   <section class="mx-auto max-w-screen-xl px-6 pb-12 pt-20 md:pb-16 md:pt-28">
     <p class="mb-6 flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-faded">
       <span class="inline-block h-px w-8 bg-ink/40"></span>
-      The Catalogue
+      Cat&aacute;logo
     </p>
     <h1 class="max-w-[18ch] text-balance font-serif text-5xl leading-[0.95] md:text-6xl">
       Every piece, <span class="italic text-accent">made to order.</span>
     </h1>
     <p class="mt-6 max-w-[52ch] leading-relaxed text-faded">
-      A small, slow catalogue — six pieces, three materials. Filter to find what fits your room, then we begin by selecting the board.
+      Explora nuestro catálogo de productos
     </p>
   </section>
 
@@ -32,13 +32,9 @@ const { categories: allCategories, materials: allMaterials } = getProductFilters
           <h2 class="text-xs uppercase tracking-[0.25em] text-faded">
             <span data-catalog-count>{products.length}</span> <span data-catalog-count-label>pieces</span>
           </h2>
-          <div class="flex flex-wrap items-center gap-2" data-filter-group="category">
+           <div class="flex flex-wrap items-center gap-2" data-filter-group="category">
             <button class="catalog-chip is-active" type="button" data-filter-value="all" aria-pressed="true">All Pieces</button>
-            {allCategories.map((category) => <button class="catalog-chip" type="button" data-filter-value={category} aria-pressed="false">{category}</button>)}
-          </div>
-          <div class="flex flex-wrap items-center gap-2" data-filter-group="material">
-            <button class="catalog-chip is-active" type="button" data-filter-value="all" aria-pressed="true">All Materials</button>
-            {allMaterials.map((material) => <button class="catalog-chip" type="button" data-filter-value={material} aria-pressed="false">{material}</button>)}
+            {categories.map((category) => <button class="catalog-chip" type="button" data-filter-value={category} aria-pressed="false">{category}</button>)}
           </div>
         </div>
         <label class="flex items-center gap-3 text-xs uppercase tracking-widest text-faded">
@@ -105,13 +101,12 @@ const { categories: allCategories, materials: allMaterials } = getProductFilters
     const countLabel = document.querySelector("[data-catalog-count-label]");
     const empty = document.querySelector("[data-catalog-empty]");
     const sort = document.querySelector("[data-catalog-sort]");
-    const filters = { category: "all", material: "all" };
+    const filter = { category: "all" };
 
-    function applyFilters() {
+    function applyFilter() {
       const visible = items.filter((item) => {
         return (
-          (filters.category === "all" || item.dataset.category === filters.category) &&
-          (filters.material === "all" || item.dataset.material === filters.material)
+          (filter.category === "all" || item.dataset.category === filter.category)
         );
       });
 

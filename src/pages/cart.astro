@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { formatPrice, getProducts, productForJson } from "@/data/products.js";
+import { formatPrice, getProducts, productForJson } from "@/db/dbFunctions.js";
 
 const products = await getProducts();
 const cartProducts = products.map(productForJson);
