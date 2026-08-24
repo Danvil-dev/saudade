@@ -94,10 +94,44 @@ export const createProduct = async (supabaseClient: any, product: Product, image
   return { success: true, data };
 };
 
-export const editProduct = async (supabaseClient: any, productId: number, fields: Partial<Product>) => {
+export const editProduct = async (
+  supabaseClient: any,
+  productId: number,
+  fields: Partial<Product>,
+  imageFile?: File,
+) => {
+  let imageURL: string | null = null;
+
+  // Subir nueva imagen si la hay
+  if (imageFile) {
+    const fileExtension = imageFile.name.split(".").pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExtension}`;
+    const filePath = `items/${fileName}`;
+
+    const { error: storageError } = await supabaseClient.storage
+      .from("products-images")
+      .upload(filePath, imageFile);
+
+    if (storageError) {
+      console.error("Error al subir la imagen:", storageError.message);
+      return { success: false, error: `Error en imagen: ${storageError.message}` };
+    }
+
+    const { data: urlData } = supabaseClient.storage.from("products-images").getPublicUrl(filePath);
+
+    imageURL = urlData.publicUrl;
+  }
+
+  // Preparar campos a actualizar
+  const updateData: Partial<Product> = { ...fields };
+  if (imageURL) {
+    updateData.image = imageURL;
+  }
+
+  // Actualizar en Supabase
   const { data, error } = await supabaseClient
     .from("products")
-    .update(fields)
+    .update(updateData)
     .eq("id", productId)
     .select();
 
