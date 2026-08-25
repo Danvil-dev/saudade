@@ -22,9 +22,10 @@ if (!solo) {
   description="A small catalogue of seating, tables and storage. Solid oak, ash and walnut, hand-built to order in Småland, Sweden."
   image={heroImg}
 >
-  <main id="main-content">
+  <main id="main-content" style="background: linear-gradient(180deg, #FFF8E7 0%, #FFFDF5 50%, #F0F4FF 100%); min-height: 100vh;">
     <h1 class="sr-only">Atelier Kō — hand-carved furniture from the northern woods</h1>
-    <section class="relative overflow-hidden bg-base">
+    
+    <section class="relative overflow-hidden" style="background: linear-gradient(135deg, #FFFDE7 0%, #FFF9C4 30%, #E3F2FD 70%, #FCE4EC 100%);">
       <div class="md:hidden">
         <div class="aspect-[4/3] w-full">
           <Image
@@ -35,27 +36,29 @@ if (!solo) {
             format="webp"
             loading="eager"
             decoding="sync"
-            class="h-full w-full object-cover object-right"
+            class="h-full w-full object-cover object-right rounded-b-3xl"
+            style="filter: brightness(1.05) saturate(0.9);"
           />
         </div>
         <div class="space-y-6 px-6 py-12">
-          <p class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-faded">
-            <span class="inline-block h-px w-8 bg-ink/40"></span>
+          <p class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em]" style="color: #9E9E9E;">
+            <span class="inline-block h-px w-8" style="background: #FFAB91;"></span>
             Småland, Sweden · Est. 2018
           </p>
-          <p class="text-balance font-serif text-4xl leading-[0.95]">
+          <p class="text-balance font-serif text-4xl leading-[0.95]" style="color: #5D4037;">
             Hand-carved pieces
             <br />
-            <span class="italic text-accent">from the northern woods.</span>
+            <span class="italic" style="color: #EF9A9A;">from the northern woods.</span>
           </p>
-          <p class="max-w-[48ch] text-pretty leading-relaxed text-faded">
+          <p class="max-w-[48ch] text-pretty leading-relaxed" style="color: #8D6E63;">
             A small, slow catalogue of seating, tables and storage — solid oak, ash and walnut,
             shaped by hand and built to outlast the room they were made for.
           </p>
           <div class="flex flex-col items-start gap-4 pt-2 sm:flex-row sm:items-center">
             <a
               href="/catalog"
-              class="group inline-flex items-center gap-3 rounded-full bg-ink px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--color-base)] transition-colors hover:bg-accent"
+              class="group inline-flex items-center gap-3 rounded-full px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105"
+              style="background: linear-gradient(135deg, #90CAF9 0%, #81D4FA 100%); color: #1A237E; box-shadow: 0 4px 15px rgba(144, 202, 249, 0.4);"
             >
               Browse the catalogue
               <span aria-hidden="true" class="transition-transform group-hover:translate-x-1"
@@ -64,7 +67,8 @@ if (!solo) {
             </a>
             <a
               href="/about"
-              class="text-[11px] uppercase tracking-[0.2em] text-faded transition-colors hover:text-ink"
+              class="text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 hover:scale-105"
+              style="color: #FFAB91;"
             >
               Our workshop →
             </a>
@@ -82,38 +86,39 @@ if (!solo) {
           loading="eager"
           decoding="sync"
           class="absolute inset-0 h-full w-full object-cover object-right"
+          style="filter: brightness(1.05) saturate(0.9);"
         />
         <div
           aria-hidden="true"
           class="absolute inset-0"
-          style="background: linear-gradient(90deg, var(--color-base) 0%, var(--color-base) 30%, color-mix(in oklab, var(--color-base) 55%, transparent) 45%, color-mix(in oklab, var(--color-base) 5%, transparent) 65%, transparent 80%)"
+          style="background: linear-gradient(90deg, #FFFDE7 0%, #FFFDE7 25%, rgba(255, 249, 196, 0.7) 40%, rgba(227, 242, 253, 0.3) 60%, transparent 80%);"
         >
         </div>
         <div
           aria-hidden="true"
           class="absolute inset-x-0 bottom-0 h-40"
-          style="background: linear-gradient(180deg, transparent, var(--color-base))"
+          style="background: linear-gradient(180deg, transparent, #FFFDE7);"
         >
         </div>
         <div class="relative mx-auto flex h-full max-w-screen-xl items-center px-6">
           <div class="max-w-[480px] space-y-8">
-            <p class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-faded">
-              <span class="inline-block h-px w-8 bg-ink/40"></span>
-              Småland, Sweden · Est. 2018
+            <p class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em]" style="color: #9E9E9E;">
+              <span class="inline-block h-px w-8" style="background: #FFAB91;"></span>
+              Saudade Camino
             </p>
-            <p class="text-balance font-serif text-5xl leading-[0.95] lg:text-6xl">
-              Hand-carved pieces
+            <p class="text-balance font-serif text-5xl leading-[0.95] lg:text-9xl" style="color: #5D4037;">
+              Saudade Granada
               <br />
-              <span class="italic text-accent">from the northern woods.</span>
+              <span class="italic" style="color: #EF9A9A;"></span>
             </p>
-            <p class="max-w-[48ch] text-pretty leading-relaxed text-faded md:text-lg">
-              A small, slow catalogue of seating, tables and storage — solid oak, ash and walnut,
-              shaped by hand and built to outlast the room they were made for.
+            <p class="max-w-[48ch] text-pretty leading-relaxed md:text-lg" style="color: #8D6E63;">
+              Una pequeña librería con un encanto suyo.
             </p>
             <div class="flex items-center gap-6 pt-2">
               <a
                 href="/catalog"
-                class="group inline-flex items-center gap-3 rounded-full bg-ink px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--color-base)] transition-colors hover:bg-accent"
+                class="group inline-flex items-center gap-3 rounded-full px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105"
+                style="background: linear-gradient(135deg, #90CAF9 0%, #81D4FA 100%); color: #1A237E; box-shadow: 0 4px 15px rgba(144, 202, 249, 0.4);"
               >
                 Browse the catalogue
                 <span aria-hidden="true" class="transition-transform group-hover:translate-x-1"
@@ -122,7 +127,8 @@ if (!solo) {
               </a>
               <a
                 href="/about"
-                class="text-[11px] uppercase tracking-[0.2em] text-faded transition-colors hover:text-ink"
+                class="text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 hover:scale-105"
+                style="color: #FFAB91;"
               >
                 Our workshop →
               </a>
@@ -130,27 +136,29 @@ if (!solo) {
           </div>
         </div>
         <div
-          class="absolute bottom-10 right-10 hidden flex-col items-end gap-1 text-[10px] uppercase tracking-[0.3em] text-ink/70 md:flex"
+          class="absolute bottom-10 right-10 hidden flex-col items-end gap-1 text-[10px] uppercase tracking-[0.3em] md:flex"
+          style="color: #9E9E9E;"
         >
           <span>No. 04 — Arvid Lounge</span>
-          <span class="text-faded">Solid Walnut · 2025</span>
+          <span style="color: #BCAAA4;">Solid Walnut · 2025</span>
         </div>
       </div>
     </section>
 
     <section class="mx-auto max-w-screen-xl px-6 pt-24 md:pt-32">
-      <div class="mb-12 flex items-end justify-between gap-6 border-t border-line pt-10">
+      <div class="mb-12 flex items-end justify-between gap-6 pt-10" style="border-top: 1px solid #E0E0E0;">
         <div>
-          <p class="mb-4 text-[11px] uppercase tracking-[0.3em] text-faded">
+          <p class="mb-4 text-[11px] uppercase tracking-[0.3em]" style="color: #9E9E9E;">
             Currently in the workshop
           </p>
-          <h2 class="max-w-[20ch] text-balance font-serif text-3xl md:text-5xl">
-            A few pieces, <span class="italic text-accent">close to ready.</span>
+          <h2 class="max-w-[20ch] text-balance font-serif text-3xl md:text-5xl" style="color: #5D4037;">
+            A few pieces, <span class="italic" style="color: #EF9A9A;">close to ready.</span>
           </h2>
         </div>
         <a
           href="/catalog"
-          class="hidden items-center gap-2 whitespace-nowrap text-[11px] uppercase tracking-[0.2em] text-faded transition-colors hover:text-ink md:inline-flex"
+          class="hidden items-center gap-2 whitespace-nowrap text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 hover:scale-105 md:inline-flex"
+          style="color: #FFAB91;"
         >
           View all
           <span aria-hidden="true">→</span>
@@ -164,7 +172,8 @@ if (!solo) {
       <div class="mt-10 flex justify-center md:hidden">
         <a
           href="/catalog"
-          class="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-faded transition-colors hover:text-ink"
+          class="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 hover:scale-105"
+          style="color: #FFAB91;"
         >
           View the full catalogue →
         </a>
@@ -177,7 +186,8 @@ if (!solo) {
           <div class="md:col-span-7 lg:col-span-8">
             <a
               href={`/products/${solo.name}`}
-              class="group block aspect-[5/4] overflow-hidden rounded-[min(1vw,16px)] bg-paper md:aspect-[16/11]"
+              class="group block aspect-[5/4] overflow-hidden md:aspect-[16/11]"
+              style="border-radius: 24px; background: linear-gradient(135deg, #FFF3E0 0%, #FFECB3 100%); box-shadow: 0 8px 30px rgba(255, 236, 179, 0.3);"
             >
               <Image
                 src={solo.image}
@@ -187,31 +197,33 @@ if (!solo) {
                 loading="lazy"
                 format="webp"
                 class="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.02]"
+                style="filter: brightness(1.05) saturate(0.9);"
               />
             </a>
           </div>
           <div class="space-y-6 md:col-span-5 lg:col-span-4">
-            <p class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-faded">
-              <span class="inline-block h-px w-8 bg-ink/40"></span>
+            <p class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em]" style="color: #9E9E9E;">
+              <span class="inline-block h-px w-8" style="background: #FFAB91;"></span>
               The Monolith
             </p>
-            <h2 class="text-balance font-serif text-4xl leading-[1.02] md:text-5xl">
-              One plank. <span class="italic text-accent">No hardware.</span>
+            <h2 class="text-balance font-serif text-4xl leading-[1.02] md:text-5xl" style="color: #5D4037;">
+              One plank. <span class="italic" style="color: #EF9A9A;">No hardware.</span>
             </h2>
-            <p class="text-pretty leading-relaxed text-faded">{solo.description}</p>
-            <dl class="grid grid-cols-2 gap-x-6 gap-y-3 border-t border-line pt-2 text-xs">
-              <dt class="pt-3 uppercase tracking-[0.2em] text-faded">Dimensions</dt>
-              <dd class="pt-3">{solo.dimensions}</dd>
-              <dt class="uppercase tracking-[0.2em] text-faded">Finish</dt>
-              <dd>{solo.finish}</dd>
-              <dt class="uppercase tracking-[0.2em] text-faded">Lead time</dt>
-              <dd>{solo.leadTime}</dd>
-              <dt class="uppercase tracking-[0.2em] text-faded">From</dt>
-              <dd class="tabular-nums">{solo.price}</dd>
+            <p class="text-pretty leading-relaxed" style="color: #8D6E63;">{solo.description}</p>
+            <dl class="grid grid-cols-2 gap-x-6 gap-y-3 pt-2 text-xs" style="border-top: 1px solid #E0E0E0;">
+              <dt class="pt-3 uppercase tracking-[0.2em]" style="color: #9E9E9E;">Dimensions</dt>
+              <dd class="pt-3" style="color: #5D4037;">{solo.dimensions}</dd>
+              <dt class="uppercase tracking-[0.2em]" style="color: #9E9E9E;">Finish</dt>
+              <dd style="color: #5D4037;">{solo.finish}</dd>
+              <dt class="uppercase tracking-[0.2em]" style="color: #9E9E9E;">Lead time</dt>
+              <dd style="color: #5D4037;">{solo.leadTime}</dd>
+              <dt class="uppercase tracking-[0.2em]" style="color: #9E9E9E;">From</dt>
+              <dd class="tabular-nums" style="color: #5D4037;">{solo.price}</dd>
             </dl>
             <a
               href={`/products/${solo.name}`}
-              class="inline-flex items-center gap-3 rounded-full bg-ink px-6 py-3.5 text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--color-base)] transition-colors hover:bg-accent"
+              class="inline-flex items-center gap-3 rounded-full px-6 py-3.5 text-[11px] font-medium uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105"
+              style="background: linear-gradient(135deg, #EF9A9A 0%, #E57373 100%); color: #FFF; box-shadow: 0 4px 15px rgba(239, 154, 154, 0.4);"
             >
               See the piece →
             </a>
@@ -221,10 +233,10 @@ if (!solo) {
     </section>
 
     <section class="mx-auto mt-32 max-w-screen-xl px-6 md:mt-48">
-      <div class="border-t border-line pt-12">
-        <p class="mb-4 text-[11px] uppercase tracking-[0.3em] text-faded">Three woods, no more</p>
-        <h2 class="mb-12 max-w-[22ch] text-balance font-serif text-3xl md:text-5xl">
-          We've spent years learning <span class="italic text-accent">three timbers</span>.
+      <div style="border-top: 1px solid #E0E0E0;" class="pt-12">
+        <p class="mb-4 text-[11px] uppercase tracking-[0.3em]" style="color: #9E9E9E;">Three woods, no more</p>
+        <h2 class="mb-12 max-w-[22ch] text-balance font-serif text-3xl md:text-5xl" style="color: #5D4037;">
+          We've spent years learning <span class="italic" style="color: #EF9A9A;">three timbers</span>.
         </h2>
         <div class="grid gap-x-8 gap-y-10 md:grid-cols-3">
           {
@@ -233,22 +245,25 @@ if (!solo) {
                 name: "European Oak",
                 tag: "Quiet · structural",
                 copy: "A single grade of slow-grown oak from managed forests in southern Sweden. Quarter-sawn for stability.",
+                color: "#FFF9C4",
               },
               {
                 name: "Curved Ash",
                 tag: "Resilient · sprung",
                 copy: "A small reserve from the south coast, steam-bent over custom forms. Used only where the curve earns it.",
+                color: "#E3F2FD",
               },
               {
                 name: "American Walnut",
                 tag: "Warm · figured",
                 copy: "Bought in single planks from a family mill in Pennsylvania. The grain decides the piece, not the other way around.",
+                color: "#FCE4EC",
               },
             ].map((material) => (
-              <div class="space-y-3 pt-2">
-                <p class="text-[10px] uppercase tracking-[0.3em] text-faded">{material.tag}</p>
-                <h3 class="font-serif text-2xl">{material.name}</h3>
-                <p class="text-sm leading-relaxed text-faded">{material.copy}</p>
+              <div class="space-y-3 pt-2 p-6 rounded-3xl transition-all duration-300 hover:scale-105" style={`background: ${material.color}; box-shadow: 0 4px 20px rgba(0,0,0,0.05);`}>
+                <p class="text-[10px] uppercase tracking-[0.3em]" style="color: #9E9E9E;">{material.tag}</p>
+                <h3 class="font-serif text-2xl" style="color: #5D4037;">{material.name}</h3>
+                <p class="text-sm leading-relaxed" style="color: #8D6E63;">{material.copy}</p>
               </div>
             ))
           }
@@ -257,13 +272,13 @@ if (!solo) {
     </section>
 
     <section class="mx-auto mt-32 max-w-screen-xl px-6 md:mt-48">
-      <div class="border-t border-line pt-12">
+      <div style="border-top: 1px solid #E0E0E0;" class="pt-12">
         <div class="mx-auto max-w-xl space-y-6 text-center">
-          <p class="text-[11px] uppercase tracking-[0.3em] text-faded">Stay informed</p>
-          <h2 class="text-balance font-serif text-3xl md:text-5xl">
-            New pieces, <span class="italic text-accent">one email at a time.</span>
+          <p class="text-[11px] uppercase tracking-[0.3em]" style="color: #9E9E9E;">Stay informed</p>
+          <h2 class="text-balance font-serif text-3xl md:text-5xl" style="color: #5D4037;">
+            New pieces, <span class="italic" style="color: #EF9A9A;">one email at a time.</span>
           </h2>
-          <p class="mx-auto max-w-[52ch] text-sm leading-relaxed text-faded">
+          <p class="mx-auto max-w-[52ch] text-sm leading-relaxed" style="color: #8D6E63;">
             We make slowly. When something is ready — or when we open the books for new commissions
             — we send a short note.
           </p>
@@ -278,7 +293,8 @@ if (!solo) {
                 required
                 maxlength="80"
                 placeholder="First name"
-                class="flex-1 rounded-full bg-paper px-5 py-4 text-sm text-ink placeholder:text-faded/60 focus:outline-none focus:ring-1 focus:ring-ink disabled:opacity-50"
+                class="flex-1 rounded-full px-5 py-4 text-sm placeholder:opacity-60 focus:outline-none focus:ring-2 transition-all duration-300"
+                style="background: #FFFDE7; color: #5D4037; box-shadow: 0 2px 10px rgba(255, 253, 231, 0.5); --tw-ring-color: #90CAF9;"
               />
               <label class="sr-only" for="email">Email address</label>
               <input
@@ -287,18 +303,21 @@ if (!solo) {
                 type="email"
                 required
                 placeholder="your@email.com"
-                class="flex-1 rounded-full bg-paper px-5 py-4 text-sm text-ink placeholder:text-faded/60 focus:outline-none focus:ring-1 focus:ring-ink disabled:opacity-50"
+                class="flex-1 rounded-full px-5 py-4 text-sm placeholder:opacity-60 focus:outline-none focus:ring-2 transition-all duration-300"
+                style="background: #FFFDE7; color: #5D4037; box-shadow: 0 2px 10px rgba(255, 253, 231, 0.5); --tw-ring-color: #90CAF9;"
               />
             </div>
             <button
               type="submit"
-              class="inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--color-base)] transition-colors hover:bg-accent disabled:opacity-50"
+              class="inline-flex w-full items-center justify-center gap-2 rounded-full px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105 disabled:opacity-50"
+              style="background: linear-gradient(135deg, #A5D6A7 0%, #81C784 100%); color: #1B5E20; box-shadow: 0 4px 15px rgba(165, 214, 167, 0.4);"
               data-newsletter-button
             >
               Notify me
             </button>
             <p
-              class="hidden pt-2 text-center text-sm text-accent"
+              class="hidden pt-2 text-center text-sm"
+              style="color: #81C784;"
               data-newsletter-success
               aria-live="polite"
             >
