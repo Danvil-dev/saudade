@@ -19,13 +19,15 @@ export const getProducts = async () => {
 };
 
 // Nos devuelve una lista con todos los productos de una misma categoria
-export const getRelated = async (category: Text) => {
+export const getRelated = async (category: string) => {
   const { data, error } = await supabase.from("products").select("*").eq("category", category);
 
   if (error) {
     console.error("[getRelated] Error al conseguir los productos relacionados:", error.message);
     return [];
   }
+  console.log(data)
+  return data || [];
 };
 
 export const getCategories = async () => {
@@ -39,6 +41,17 @@ export const getCategories = async () => {
   const categorias = [...new Set(data.map((item) => item.category))].filter(Boolean);
   return categorias;
 };
+
+export const getProductsOfCategory = async (category: string) => {
+  const {data, error} = await supabase.from("products").select("*").eq("category", category)
+
+  if ( error ) {
+    console.error("[getProductsOfCategory] Error al conseguir los productos de una categoria", error.message);
+    return [];
+  }
+
+  return data;
+}
 
 export interface Product {
   name: string;

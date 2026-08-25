@@ -4,15 +4,17 @@ import ProductCard from "@/components/ProductCard.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getProducts, getRelated } from "@/db/dbFunctions.js";
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   const products = await getProducts();
 
   // Usamos Promise.all para esperar a que todas las consultas de 'getRelated' terminen
   return await Promise.all(
     products.map(async (product) => {
-      let related = await getRelated(product.category);
+      const relatedData = (await getRelated(product.category)) || [];
 
-      related = related.filter((p) => p.name !== product.name);
+      const related = relatedData.filter((prod) => prod.name !== product.name);
 
       return {
         params: { name: product.name },

@@ -3,9 +3,6 @@ Inspiracion: https://lamarimorenaonline.com/
  **GENERAL**
 
 Funcionalidades:
- * Login en ruta oculta ( Valentin )
- * Panel de control ( Valentin )
- * CRUD de productos ( Valentin )
  * Gestion de reservas
 
 Frontend:
@@ -20,8 +17,6 @@ Frontend:
 NavBar: Libreria, Papeleria, Regalos
 
 Backend:
- * Crear base de datos ( Valentin )
- * Registrar usuarios admin ( Valentin )
  * Añadir datos a la base ( Ambos )
  * Conectar al front
 
