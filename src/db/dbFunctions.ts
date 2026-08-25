@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { success } from "astro:schema";
+import { number, success } from "astro:schema";
 
 const supabaseURL = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -26,7 +26,7 @@ export const getRelated = async (category: string) => {
     console.error("[getRelated] Error al conseguir los productos relacionados:", error.message);
     return [];
   }
-  console.log(data)
+  console.log(data);
   return data || [];
 };
 
@@ -43,15 +43,18 @@ export const getCategories = async () => {
 };
 
 export const getProductsOfCategory = async (category: string) => {
-  const {data, error} = await supabase.from("products").select("*").eq("category", category)
+  const { data, error } = await supabase.from("products").select("*").eq("category", category);
 
-  if ( error ) {
-    console.error("[getProductsOfCategory] Error al conseguir los productos de una categoria", error.message);
+  if (error) {
+    console.error(
+      "[getProductsOfCategory] Error al conseguir los productos de una categoria",
+      error.message,
+    );
     return [];
   }
 
   return data;
-}
+};
 
 export interface Product {
   name: string;
@@ -169,4 +172,143 @@ export const deleteProduct = async (supabaseClient: any, productId: number) => {
   }
 
   return { success: true, data };
+};
+
+// Crear reserva
+export interface Booking {
+  total_price: number;
+  paid: boolean;
+  name: string;
+  email: string;
+  number: number;
+}
+export interface ItemsBooking {
+  product_id: number;
+  quantity: number;
+  price: number;
+}
+
+const createBooking = async (supabaseClient: any, booking: Booking, cartItems: ItemsBooking[]) => {
+  try {
+    const { data, error } = await supabaseClient
+      .from("bookings")
+      .insert([
+        {
+          total_price: booking.total_price,
+          paid: booking.paid,
+          name: booking.name,
+          email: booking.email,
+          number: booking.number,
+        },
+      ])
+      .select()
+      .single();
+
+    if (error || !data) {
+      console.error("Error al crear la reserva:", error?.message);
+      return { success: false, error: error?.message };
+    }
+
+    const itemsToInsert = cartItems.map((item) => ({
+      booking_id: data.id,
+      product_id: item.product_id,
+      quantity: item.quantity,
+      price: item.price,
+    }));
+
+    const { error: itemsError } = await supabaseClient
+      .from("productsBooking")
+      .insert(itemsToInsert);
+
+    if (itemsError) {
+      console.error("Error al guardar los items de la reserva:", itemsError.message);
+      return { success: false, error: itemsError.message };
+    }
+
+    return { success: true, bookingId: data.id };
+  } catch (e: any) {
+    console.error("Error en [createBooking]:", e);
+    return { success: false, error: e?.message || "Error inesperado" };
+  }
+};
+
+const editBooking = async (supabaseClient: any, bookingId: number, paid: boolean) => {
+  try {
+    const { data, error } = await supabaseClient
+      .from("bookings")
+      .update({ paid })
+      .eq("id", bookingId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error al actualizar la reserva", error.message);
+      return { success: false, error: error.message };
+    }
+    return { success: true, data };
+  } catch (e: any) {
+    console.error("Error en [updateBookingPaymentStatus]:", e);
+    return { success: false, error: e?.message || "Error" };
+  }
+};
+
+const getPaidBookings = async (supabaseClient: any) => {
+  const { data, error } = await supabaseClient.from("bookings").select("*").eq("paid", true);
+
+  if (error) {
+    console.error("[getPaidBookings] Error al conseguir las reservas pagadas");
+    return [];
+  }
+
+  return { success: true, data };
+};
+
+const getUnpaidBookings = async (supabaseClient: any) => {
+  const { data, error } = await supabaseClient.from("bookings").select("*").eq("paid", false);
+
+  if (error) {
+    console.error("[getPaidBookings] Error al conseguir las reservas pagadas");
+    return [];
+  }
+
+  return { success: true, data };
+};
+
+const deleteBooking = async (supabaseClient: any, bookingId: number) => {
+  const { data, error } = await supabaseClient
+    .from("bookings")
+    .delete()
+    .eq("id", bookingId)
+    .select();
+
+  if (error) {
+    console.error("Error al eliminar la reserva: ", error.message);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true, data };
+};
+
+const autoDeletePaidBokings = async (supabaseClient: any, daysOld: number = 30) => {
+  try {
+    const limitDate = new Date();
+    limitDate.setDate(limitDate.getDate() - daysOld);
+
+    const { data, error } = await supabaseClient
+      .from("bookings")
+      .delete()
+      .eq("paid", true)
+      .lt("created_at", limitDate.toISOString())
+      .select();
+
+    if (error) {
+      console.error("Error al eliminar reservas pagadas antiguas:", error.message);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, deletedCount: data?.length || 0, data };
+  } catch (e: any) {
+    console.error("Error en [autoDeletePaidBookings]:", e);
+    return { success: false, error: e?.message || "Error inesperado" };
+  }
 };
