@@ -6,76 +6,77 @@ import workshopImg from "@/assets/atelier-workshop.jpg";
 ---
 
 <BaseLayout
-  title="About — Atelier Kō"
-  description="A small workshop in Småland, Sweden, building furniture by hand from solid oak, ash and walnut. Slow, signed, and made to be repaired."
+  title="Sobre nosotros — Saudade"
+  description="Una pequeña librería con encanto en Granada, donde las historias se encuentran con los caminos."
   image={workshopImg}
 >
   <main id="main-content">
   <section class="mx-auto max-w-screen-xl px-6 pb-16 pt-20 md:pb-24 md:pt-28">
-    <p class="mb-6 flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-faded">
-      <span class="inline-block h-px w-8 bg-ink/40"></span>
-      About the atelier
+    <p class="mb-6 flex items-center gap-3 text-[11px] uppercase tracking-[0.3em]" style="color: var(--faded);">
+      <span class="inline-block h-px w-8" style="background: var(--accent);"></span>
+      Nuestra historia
     </p>
-    <h1 class="max-w-[18ch] text-balance font-serif text-5xl leading-[0.95] md:text-7xl">
-      A small workshop, <span class="italic text-accent">made slowly.</span>
+    <h1 class="max-w-[18ch] text-balance font-serif text-5xl leading-[0.95] md:text-7xl" style="color: var(--ink);">
+      Una pequeña historia, <span class="italic" style="color: var(--accent);">hecha con calma.</span>
     </h1>
-    <p class="mt-8 max-w-[58ch] text-lg leading-relaxed text-faded">
-      Atelier Kō is a two-person furniture workshop in Småland, Sweden. We design and build a small catalogue of seating, tables and storage — by hand, to order, in solid wood. No factory, no veneers, no rush.
+    <p class="mt-8 max-w-[58ch] text-lg leading-relaxed" style="color: var(--faded);">
+      Saudade es una pequeña librería en Granada, donde las historias viajan y los caminos se cruzan. Diseños únicos de jóvenes creadores.
     </p>
   </section>
 
   <section class="relative w-full">
     <Image
       src={workshopImg}
-      alt="Sunlit Scandinavian woodworking atelier with hand tools and a half-finished chair"
+      alt="Saudade - Encuentros en el Camino"
       width={1920}
       height={1080}
       format="webp"
       loading="eager"
       class="h-[50vh] w-full object-cover md:h-[70vh]"
+      style="filter: brightness(1.02) saturate(0.95);"
     />
   </section>
 
   <section class="mx-auto mt-24 grid max-w-screen-xl gap-10 px-6 md:mt-32 md:grid-cols-12 md:gap-16">
     <div class="md:col-span-5">
-      <p class="mb-6 text-[11px] uppercase tracking-[0.3em] text-faded">Est. 2018</p>
-      <h2 class="text-balance font-serif text-3xl leading-[1.02] md:text-5xl">We started with one chair.</h2>
+      <p class="mb-6 text-[11px] uppercase tracking-[0.3em]" style="color: var(--faded);">Desde 2018</p>
+      <h2 class="text-balance font-serif text-3xl leading-[1.02] md:text-5xl" style="color: var(--ink);">Empezamos con una idea.</h2>
     </div>
-    <div class="space-y-6 leading-relaxed text-faded md:col-span-6 md:col-start-7">
+    <div class="space-y-6 leading-relaxed md:col-span-6 md:col-start-7" style="color: var(--faded);">
       <p>
-        Atelier Kō began in a borrowed barn outside Växjö, with a single steam-bent ash chair — the piece that became the Arvid. Seven years later, we still work in solid wood only, still build to order, and still sign every piece on the underside before it leaves.
+        Saudade comenzó como un pequeño proyecto de pasión por las cosas bien hechas. Hoy seguimos creando piezas únicas, con el mismo cariño y atención al detalle.
       </p>
       <p>
-        The catalogue is intentionally small. Six pieces, three timbers. We'd rather know a few things well than offer a hundred we don't.
+        El catálogo es pequeño a propósito. Pocas cosas, bien hechas. Prefieren conocer pocas cosas a ofrecer cien que no conocen.
       </p>
     </div>
   </section>
 
-  <section class="mx-auto mt-24 max-w-screen-xl border-t border-line px-6 pt-12 md:mt-32">
-    <p class="mb-12 text-[11px] uppercase tracking-[0.3em] text-faded">How we work</p>
+  <section class="mx-auto mt-24 max-w-screen-xl px-6 pt-12 md:mt-32" style="border-top: 2px solid var(--pastel-blue);">
+    <p class="mb-12 text-[11px] uppercase tracking-[0.3em]" style="color: var(--faded);">Cómo trabajamos</p>
     <div class="grid gap-x-8 gap-y-12 md:grid-cols-3">
       {
         [
           {
             n: "01",
-            h: "Solid wood, always",
-            p: "No MDF, no veneer, no engineered cores. Every surface you see and touch is the same piece of wood, all the way through.",
+            h: "Diseños únicos",
+            p: "Cada pieza está diseñada por jóvenes creativos con una visión única y original.",
           },
           {
             n: "02",
-            h: "By hand, mostly",
-            p: "Machines mill and rough-cut. The joints, the surfaces, and the finish are all worked by hand. It's slower. It shows.",
+            h: "Hecho con cariño",
+            p: "No hay fábricas ni producción en masa. Cada detalle cuenta y se cuida con esmero.",
           },
           {
             n: "03",
-            h: "Made to be repaired",
-            p: "Hard-wax oils and natural soap finishes can be re-applied at home. Joints are mechanical, not glued shut. Nothing is disposable.",
+            h: "Para durar",
+            p: "Materiales de calidad y acabados que resisten el paso del tiempo. Nada desechable.",
           },
         ].map((block) => (
-          <div class="space-y-3">
-            <p class="text-[10px] uppercase tracking-[0.3em] text-faded tabular-nums">{block.n}</p>
-            <h3 class="font-serif text-2xl">{block.h}</h3>
-            <p class="text-sm leading-relaxed text-faded">{block.p}</p>
+          <div class="space-y-4 p-6 rounded-3xl" style={`background: var(--pastel-yellow); box-shadow: 0 8px 30px rgba(255, 249, 196, 0.3);`}>
+            <p class="text-[10px] uppercase tracking-[0.3em] tabular-nums" style="color: var(--faded);">{block.n}</p>
+            <h3 class="font-serif text-2xl" style="color: var(--ink);">{block.h}</h3>
+            <p class="text-sm leading-relaxed" style="color: var(--faded);">{block.p}</p>
           </div>
         ))
       }
@@ -85,49 +86,50 @@ import workshopImg from "@/assets/atelier-workshop.jpg";
   <section class="mt-24 md:mt-32">
     <div class="mx-auto grid max-w-screen-2xl items-center gap-10 px-6 md:grid-cols-12 md:gap-16">
       <div class="md:col-span-5">
-        <div class="aspect-[3/4] overflow-hidden rounded-[min(1vw,12px)] bg-paper">
+        <div class="aspect-[3/4] overflow-hidden rounded-3xl" style="background: var(--pastel-red); box-shadow: 0 12px 40px rgba(255, 205, 210, 0.4);">
           <Image
             src={handsImg}
-            alt="Close-up of a craftsman's hands planing a piece of pale oak"
+            alt="Saudade - Encuentros en el Camino"
             width={1080}
             height={1440}
             format="webp"
             loading="lazy"
             class="h-full w-full object-cover"
+            style="filter: brightness(1.02) saturate(0.95);"
           />
         </div>
       </div>
       <div class="space-y-8 md:col-span-6 md:col-start-7">
-        <p class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em] text-faded">
-          <span class="inline-block h-px w-8 bg-ink/40"></span>
-          On materials
+        <p class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em]" style="color: var(--faded);">
+          <span class="inline-block h-px w-8" style="background: var(--accent);"></span>
+          Sobre nosotros
         </p>
-        <blockquote class="text-balance font-serif text-3xl leading-[1.15] md:text-4xl">
-          "We don't buy lumber by the pallet. Every board is chosen
-          <span class="italic text-accent">for the piece it will become</span> — sometimes months before it is cut."
+        <blockquote class="text-balance font-serif text-3xl leading-[1.15] md:text-4xl" style="color: var(--ink);">
+          "No compramos cosas por volumen. Cada pieza es elegida
+          <span class="italic" style="color: var(--accent);">para la historia que quiere contar</span> — a veces meses antes de que se haga."
         </blockquote>
-        <p class="text-xs uppercase tracking-[0.25em] text-faded">— Erik Lindgren, founder</p>
-        <div class="space-y-3 border-t border-line pt-6 text-sm leading-relaxed text-faded">
+        <p class="text-xs uppercase tracking-[0.25em]" style="color: var(--faded);">— Fundadores de Saudade</p>
+        <div class="space-y-3 pt-6 text-sm leading-relaxed" style="border-top: 1px solid var(--pastel-blue); color: var(--faded);">
           <p>
-            European oak from managed Swedish forests. Curved ash from a small reserve on the south coast. American walnut from a family mill in Pennsylvania. Three woods. No more.
+            Jóvenes diseñadores de Granada y alrededores. Tres colecciones. Sin más.
           </p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="mx-auto mt-24 max-w-screen-xl border-y border-line px-6 py-12 md:mt-32">
+  <section class="mx-auto mt-24 max-w-screen-xl px-6 py-12 md:mt-32" style="border-top: 2px solid var(--pastel-yellow); border-bottom: 2px solid var(--pastel-yellow);">
     <div class="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
       {
         [
-          { n: "2018", l: "Founded" },
-          { n: "2", l: "Makers" },
-          { n: "3", l: "Timbers" },
-          { n: "4–10", l: "Weeks lead time" },
+          { n: "2018", l: "Fundación" },
+          { n: "3", l: "Colecciones" },
+          { n: "Granada", l: "Ubicación" },
+          { n: "24/48h", l: "Envíos" },
         ].map((stat) => (
           <div class="space-y-2">
-            <p class="font-serif text-4xl tabular-nums md:text-5xl">{stat.n}</p>
-            <p class="text-[10px] uppercase tracking-[0.3em] text-faded">{stat.l}</p>
+            <p class="font-serif text-4xl tabular-nums md:text-5xl" style="color: var(--ink);">{stat.n}</p>
+            <p class="text-[10px] uppercase tracking-[0.3em]" style="color: var(--faded);">{stat.l}</p>
           </div>
         ))
       }
@@ -137,22 +139,24 @@ import workshopImg from "@/assets/atelier-workshop.jpg";
   <section id="studio" class="mx-auto mb-32 mt-12 max-w-screen-xl px-6 md:mt-16">
     <div class="grid items-end gap-10 md:grid-cols-12">
       <div class="md:col-span-7">
-        <h2 class="max-w-[20ch] text-balance font-serif text-3xl leading-[1.02] md:text-5xl">
-          Visit the workshop, or begin with a piece.
+        <h2 class="max-w-[20ch] text-balance font-serif text-3xl leading-[1.02] md:text-5xl" style="color: var(--ink);">
+          Visítanos, o empieza con una pieza.
         </h2>
       </div>
       <div class="flex flex-col gap-4 sm:flex-row md:col-span-5 md:justify-end">
         <a
           href="/catalog"
-          class="inline-flex items-center justify-center gap-3 rounded-full bg-ink px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--color-base)] transition-colors hover:bg-accent"
+          class="inline-flex items-center justify-center gap-3 rounded-full px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105"
+          style="background: var(--pastel-blue); color: var(--ink); box-shadow: 0 4px 20px rgba(187, 222, 251, 0.5);"
         >
-          See the catalogue →
+          Ver tienda →
         </a>
         <a
-          href="mailto:workshop@atelier-ko.example"
-          class="inline-flex items-center justify-center gap-3 rounded-full px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] text-ink ring-1 ring-line transition-colors hover:bg-paper"
+          href="mailto:info@saudade.es"
+          class="inline-flex items-center justify-center gap-3 rounded-full px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105"
+          style="background: var(--pastel-yellow); color: var(--ink); box-shadow: 0 4px 20px rgba(255, 249, 196, 0.5);"
         >
-          Write to us
+          Escríbenos
         </a>
       </div>
     </div>

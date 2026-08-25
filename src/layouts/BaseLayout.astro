@@ -4,8 +4,8 @@ import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 
 const {
-  title = "Atelier Kō — Hand-made furniture from the northern woods",
-  description = "A small Swedish atelier crafting solid oak, ash and walnut furniture by hand. Made to order in Småland.",
+  title = "Saudade — Encuentros en el Camino",
+  description = "Una pequeña librería con encanto, where stories meet journeys.",
   image,
   noindex = false,
   includeHeader = true,
@@ -23,15 +23,15 @@ const ogImage = image ? new URL(image.src ?? image, Astro.site ?? Astro.url.orig
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="author" content="Atelier Kō" />
-    <meta name="theme-color" content="#f8f7f4" />
+    <meta name="author" content="Saudade" />
+    <meta name="theme-color" content="#FFFDF7" />
     <link rel="canonical" href={canonicalUrl.href} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     {noindex && <meta name="robots" content="noindex,nofollow" />}
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:site_name" content="Atelier Kō" />
+    <meta property="og:site_name" content="Saudade" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl.href} />
     {ogImage && <meta property="og:image" content={ogImage} />}
@@ -111,9 +111,10 @@ const ogImage = image ? new URL(image.src ?? image, Astro.site ?? Astro.url.orig
   <body class="bg-base text-ink">
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:text-[var(--color-base)]"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:px-4 focus:py-2 focus:text-sm"
+      style="background: var(--pastel-blue); color: var(--ink);"
     >
-      Skip to content
+      Saltar al contenido
     </a>
     {includeHeader && <SiteHeader currentPath={Astro.url.pathname} />}
     <div>

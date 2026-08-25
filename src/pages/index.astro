@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import ProductCard from "@/components/ProductCard.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import heroImg from "@/assets/atelier-hero.jpg";
+import bannerImg from "@/assets/banner.webp";
 import { getProducts } from "@/db/dbFunctions.js";
 
 const products = await getProducts();
@@ -18,168 +19,124 @@ if (!solo) {
 ---
 
 <BaseLayout
-  title="Atelier Kō — Furniture, made by hand"
-  description="A small catalogue of seating, tables and storage. Solid oak, ash and walnut, hand-built to order in Småland, Sweden."
+  title="Saudade — Encuentros en el Camino"
+  description="Una pequeña librería con encanto,where stories meet journeys."
   image={heroImg}
 >
-  <main id="main-content" style="background: linear-gradient(180deg, #FFF8E7 0%, #FFFDF5 50%, #F0F4FF 100%); min-height: 100vh;">
-    <h1 class="sr-only">Atelier Kō — hand-carved furniture from the northern woods</h1>
+  <main id="main-content">
+    <h1 class="sr-only">Saudade — Encuentros en el Camino</h1>
     
-    <section class="relative overflow-hidden" style="background: linear-gradient(135deg, #FFFDE7 0%, #FFF9C4 30%, #E3F2FD 70%, #FCE4EC 100%);">
-      <div class="md:hidden">
-        <div class="aspect-[4/3] w-full">
-          <Image
-            src={heroImg}
-            alt="Hand-carved sculptural walnut lounge chair in a sunlit atelier"
-            width={1600}
-            height={1280}
-            format="webp"
-            loading="eager"
-            decoding="sync"
-            class="h-full w-full object-cover object-right rounded-b-3xl"
-            style="filter: brightness(1.05) saturate(0.9);"
-          />
-        </div>
-        <div class="space-y-6 px-6 py-12">
-          <p class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em]" style="color: #9E9E9E;">
-            <span class="inline-block h-px w-8" style="background: #FFAB91;"></span>
-            Småland, Sweden · Est. 2018
-          </p>
-          <p class="text-balance font-serif text-4xl leading-[0.95]" style="color: #5D4037;">
-            Hand-carved pieces
-            <br />
-            <span class="italic" style="color: #EF9A9A;">from the northern woods.</span>
-          </p>
-          <p class="max-w-[48ch] text-pretty leading-relaxed" style="color: #8D6E63;">
-            A small, slow catalogue of seating, tables and storage — solid oak, ash and walnut,
-            shaped by hand and built to outlast the room they were made for.
-          </p>
-          <div class="flex flex-col items-start gap-4 pt-2 sm:flex-row sm:items-center">
-            <a
-              href="/catalog"
-              class="group inline-flex items-center gap-3 rounded-full px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105"
-              style="background: linear-gradient(135deg, #90CAF9 0%, #81D4FA 100%); color: #1A237E; box-shadow: 0 4px 15px rgba(144, 202, 249, 0.4);"
-            >
-              Browse the catalogue
-              <span aria-hidden="true" class="transition-transform group-hover:translate-x-1"
-                >→</span
-              >
-            </a>
-            <a
-              href="/about"
-              class="text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 hover:scale-105"
-              style="color: #FFAB91;"
-            >
-              Our workshop →
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="relative hidden h-[88vh] max-h-[920px] min-h-[640px] w-full md:block">
+    <!-- Banner debajo del header -->
+    <section class="w-full overflow-hidden" style="background: linear-gradient(180deg, var(--pastel-yellow) 0%, var(--pastel-blue) 50%, var(--pastel-red) 100%);">
+      <div class="mx-auto max-w-screen-2xl">
         <Image
-          src={heroImg}
-          alt="Hand-carved sculptural walnut lounge chair in a sunlit atelier"
-          width={1600}
-          height={1280}
+          src={bannerImg}
+          alt="Saudade - Encuentros en el Camino"
+          width={1920}
+          height={400}
           format="webp"
           loading="eager"
           decoding="sync"
-          class="absolute inset-0 h-full w-full object-cover object-right"
-          style="filter: brightness(1.05) saturate(0.9);"
+          class="h-[200px] w-full object-cover md:h-[300px]"
+          style="filter: brightness(1.02) saturate(0.95);"
         />
-        <div
-          aria-hidden="true"
-          class="absolute inset-0"
-          style="background: linear-gradient(90deg, #FFFDE7 0%, #FFFDE7 25%, rgba(255, 249, 196, 0.7) 40%, rgba(227, 242, 253, 0.3) 60%, transparent 80%);"
-        >
-        </div>
-        <div
-          aria-hidden="true"
-          class="absolute inset-x-0 bottom-0 h-40"
-          style="background: linear-gradient(180deg, transparent, #FFFDE7);"
-        >
-        </div>
-        <div class="relative mx-auto flex h-full max-w-screen-xl items-center px-6">
-          <div class="max-w-[480px] space-y-8">
-            <p class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em]" style="color: #9E9E9E;">
-              <span class="inline-block h-px w-8" style="background: #FFAB91;"></span>
-              Saudade Camino
+      </div>
+    </section>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden" style="background: linear-gradient(180deg, var(--pastel-yellow) 0%, var(--base) 100%);">
+      <div class="mx-auto max-w-screen-xl px-6 py-16 md:py-24">
+        <div class="grid items-center gap-12 md:grid-cols-2">
+          <div class="space-y-8">
+            <p class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em]" style="color: var(--faded);">
+              <span class="inline-block h-px w-8" style="background: var(--accent);"></span>
+              Granada, España
             </p>
-            <p class="text-balance font-serif text-5xl leading-[0.95] lg:text-9xl" style="color: #5D4037;">
-              Saudade Granada
+            <p class="text-balance font-serif text-4xl leading-[1.1] md:text-6xl" style="color: var(--ink);">
+              Encuentros
               <br />
-              <span class="italic" style="color: #EF9A9A;"></span>
+              <span class="italic" style="color: var(--accent);">en el Camino.</span>
             </p>
-            <p class="max-w-[48ch] text-pretty leading-relaxed md:text-lg" style="color: #8D6E63;">
-              Una pequeña librería con un encanto suyo.
+            <p class="max-w-[48ch] text-pretty leading-relaxed md:text-lg" style="color: var(--faded);">
+              Una pequeña librería con un encanto suyo. Historias que viajan, caminos que se cruzan.
             </p>
-            <div class="flex items-center gap-6 pt-2">
+            <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
               <a
                 href="/catalog"
-                class="group inline-flex items-center gap-3 rounded-full px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105"
-                style="background: linear-gradient(135deg, #90CAF9 0%, #81D4FA 100%); color: #1A237E; box-shadow: 0 4px 15px rgba(144, 202, 249, 0.4);"
+                class="group inline-flex items-center gap-3 rounded-full px-8 py-4 text-[11px] font-medium uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105"
+                style="background: var(--pastel-blue); color: var(--ink); box-shadow: 0 4px 20px rgba(187, 222, 251, 0.5);"
               >
-                Browse the catalogue
-                <span aria-hidden="true" class="transition-transform group-hover:translate-x-1"
-                  >→</span
-                >
+                Explorar tienda
+                <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
               </a>
               <a
                 href="/about"
-                class="text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 hover:scale-105"
-                style="color: #FFAB91;"
+                class="text-[11px] uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105"
+                style="color: var(--accent);"
               >
-                Our workshop →
+                Nuestra historia →
               </a>
             </div>
           </div>
-        </div>
-        <div
-          class="absolute bottom-10 right-10 hidden flex-col items-end gap-1 text-[10px] uppercase tracking-[0.3em] md:flex"
-          style="color: #9E9E9E;"
-        >
-          <span>No. 04 — Arvid Lounge</span>
-          <span style="color: #BCAAA4;">Solid Walnut · 2025</span>
+          <div class="relative">
+            <div
+              class="aspect-[4/5] overflow-hidden rounded-3xl"
+              style="background: var(--pastel-red); box-shadow: 0 20px 60px rgba(255, 205, 210, 0.4);"
+            >
+              <Image
+                src={heroImg}
+                alt="Saudade - Encuentros en el Camino"
+                width={800}
+                height={1000}
+                format="webp"
+                loading="eager"
+                decoding="sync"
+                class="h-full w-full object-cover"
+                style="filter: brightness(1.02) saturate(0.95);"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- Destacados -->
     <section class="mx-auto max-w-screen-xl px-6 pt-24 md:pt-32">
-      <div class="mb-12 flex items-end justify-between gap-6 pt-10" style="border-top: 1px solid #E0E0E0;">
+      <div class="mb-12 flex items-end justify-between gap-6" style="border-top: 2px solid var(--pastel-yellow); padding-top: 2rem;">
         <div>
-          <p class="mb-4 text-[11px] uppercase tracking-[0.3em]" style="color: #9E9E9E;">
-            Currently in the workshop
+          <p class="mb-4 text-[11px] uppercase tracking-[0.3em]" style="color: var(--faded);">
+            Lo más nuevo
           </p>
-          <h2 class="max-w-[20ch] text-balance font-serif text-3xl md:text-5xl" style="color: #5D4037;">
-            A few pieces, <span class="italic" style="color: #EF9A9A;">close to ready.</span>
+          <h2 class="max-w-[20ch] text-balance font-serif text-3xl md:text-5xl" style="color: var(--ink);">
+            Destacados, <span class="italic" style="color: var(--accent);">favoritos.</span>
           </h2>
         </div>
         <a
           href="/catalog"
-          class="hidden items-center gap-2 whitespace-nowrap text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 hover:scale-105 md:inline-flex"
-          style="color: #FFAB91;"
+          class="hidden items-center gap-2 whitespace-nowrap text-[11px] uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105 md:inline-flex"
+          style="color: var(--accent);"
         >
-          View all
+          Ver todo
           <span aria-hidden="true">→</span>
         </a>
       </div>
 
-      <div class="grid grid-cols-1 gap-x-8 gap-y-12 md:grid-cols-3">
+      <div class="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 md:grid-cols-3">
         {featured.map((product) => <ProductCard product={product} />)}
       </div>
 
       <div class="mt-10 flex justify-center md:hidden">
         <a
           href="/catalog"
-          class="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 hover:scale-105"
-          style="color: #FFAB91;"
+          class="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105"
+          style="color: var(--accent);"
         >
-          View the full catalogue →
+          Ver la tienda completa →
         </a>
       </div>
     </section>
 
+    <!-- Producto destacado -->
     <section class="mt-32 md:mt-48">
       <div class="mx-auto max-w-screen-2xl px-6">
         <div class="grid items-center gap-10 md:grid-cols-12 md:gap-16">
@@ -187,7 +144,7 @@ if (!solo) {
             <a
               href={`/products/${solo.name}`}
               class="group block aspect-[5/4] overflow-hidden md:aspect-[16/11]"
-              style="border-radius: 24px; background: linear-gradient(135deg, #FFF3E0 0%, #FFECB3 100%); box-shadow: 0 8px 30px rgba(255, 236, 179, 0.3);"
+              style="border-radius: 24px; background: var(--pastel-yellow); box-shadow: 0 12px 40px rgba(255, 249, 196, 0.5);"
             >
               <Image
                 src={solo.image}
@@ -197,131 +154,142 @@ if (!solo) {
                 loading="lazy"
                 format="webp"
                 class="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.02]"
-                style="filter: brightness(1.05) saturate(0.9);"
+                style="filter: brightness(1.02) saturate(0.95);"
               />
             </a>
           </div>
           <div class="space-y-6 md:col-span-5 lg:col-span-4">
-            <p class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em]" style="color: #9E9E9E;">
-              <span class="inline-block h-px w-8" style="background: #FFAB91;"></span>
-              The Monolith
+            <p class="flex items-center gap-3 text-[11px] uppercase tracking-[0.3em]" style="color: var(--faded);">
+              <span class="inline-block h-px w-8" style="background: var(--accent);"></span>
+              Nuevo
             </p>
-            <h2 class="text-balance font-serif text-4xl leading-[1.02] md:text-5xl" style="color: #5D4037;">
-              One plank. <span class="italic" style="color: #EF9A9A;">No hardware.</span>
+            <h2 class="text-balance font-serif text-4xl leading-[1.02] md:text-5xl" style="color: var(--ink);">
+              {solo.name} <span class="italic" style="color: var(--accent);">especial.</span>
             </h2>
-            <p class="text-pretty leading-relaxed" style="color: #8D6E63;">{solo.description}</p>
-            <dl class="grid grid-cols-2 gap-x-6 gap-y-3 pt-2 text-xs" style="border-top: 1px solid #E0E0E0;">
-              <dt class="pt-3 uppercase tracking-[0.2em]" style="color: #9E9E9E;">Dimensions</dt>
-              <dd class="pt-3" style="color: #5D4037;">{solo.dimensions}</dd>
-              <dt class="uppercase tracking-[0.2em]" style="color: #9E9E9E;">Finish</dt>
-              <dd style="color: #5D4037;">{solo.finish}</dd>
-              <dt class="uppercase tracking-[0.2em]" style="color: #9E9E9E;">Lead time</dt>
-              <dd style="color: #5D4037;">{solo.leadTime}</dd>
-              <dt class="uppercase tracking-[0.2em]" style="color: #9E9E9E;">From</dt>
-              <dd class="tabular-nums" style="color: #5D4037;">{solo.price}</dd>
+            <p class="text-pretty leading-relaxed" style="color: var(--faded);">{solo.description}</p>
+            <dl class="grid grid-cols-2 gap-x-6 gap-y-3 pt-2 text-xs" style="border-top: 1px solid var(--pastel-blue);">
+              <dt class="pt-3 uppercase tracking-[0.2em]" style="color: var(--faded);">Dimensiones</dt>
+              <dd class="pt-3" style="color: var(--ink);">{solo.dimensions}</dd>
+              <dt class="uppercase tracking-[0.2em]" style="color: var(--faded);">Acabado</dt>
+              <dd style="color: var(--ink);">{solo.finish}</dd>
+              <dt class="uppercase tracking-[0.2em]" style="color: var(--faded);">Plazo</dt>
+              <dd style="color: var(--ink);">{solo.leadTime}</dd>
+              <dt class="uppercase tracking-[0.2em]" style="color: var(--faded);">Precio</dt>
+              <dd class="tabular-nums" style="color: var(--ink);">{solo.price}</dd>
             </dl>
             <a
               href={`/products/${solo.name}`}
               class="inline-flex items-center gap-3 rounded-full px-6 py-3.5 text-[11px] font-medium uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105"
-              style="background: linear-gradient(135deg, #EF9A9A 0%, #E57373 100%); color: #FFF; box-shadow: 0 4px 15px rgba(239, 154, 154, 0.4);"
+              style="background: var(--pastel-red); color: var(--ink); box-shadow: 0 4px 20px rgba(255, 205, 210, 0.5);"
             >
-              See the piece →
+              Ver producto →
             </a>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Categorías -->
     <section class="mx-auto mt-32 max-w-screen-xl px-6 md:mt-48">
-      <div style="border-top: 1px solid #E0E0E0;" class="pt-12">
-        <p class="mb-4 text-[11px] uppercase tracking-[0.3em]" style="color: #9E9E9E;">Three woods, no more</p>
-        <h2 class="mb-12 max-w-[22ch] text-balance font-serif text-3xl md:text-5xl" style="color: #5D4037;">
-          We've spent years learning <span class="italic" style="color: #EF9A9A;">three timbers</span>.
+      <div style="border-top: 2px solid var(--pastel-blue); padding-top: 2rem;">
+        <p class="mb-4 text-[11px] uppercase tracking-[0.3em]" style="color: var(--faded);">Explora por categorías</p>
+        <h2 class="mb-12 max-w-[22ch] text-balance font-serif text-3xl md:text-5xl" style="color: var(--ink);">
+          Encuentra lo que <span class="italic" style="color: var(--accent);">buscas.</span>
         </h2>
-        <div class="grid gap-x-8 gap-y-10 md:grid-cols-3">
+        <div class="grid gap-6 md:grid-cols-3">
           {
             [
               {
-                name: "European Oak",
-                tag: "Quiet · structural",
-                copy: "A single grade of slow-grown oak from managed forests in southern Sweden. Quarter-sawn for stability.",
-                color: "#FFF9C4",
+                name: "Ropa",
+                tag: "Diseños únicos",
+                copy: "Blusas, vestidos y complementos de jóvenes diseñadores.",
+                color: "var(--pastel-yellow)",
+                href: "/categoria/ropa/",
               },
               {
-                name: "Curved Ash",
-                tag: "Resilient · sprung",
-                copy: "A small reserve from the south coast, steam-bent over custom forms. Used only where the curve earns it.",
-                color: "#E3F2FD",
+                name: "Complementos",
+                tag: "Detalles que importan",
+                copy: "Bolsos, pulseras, pendientes y más.",
+                color: "var(--pastel-blue)",
+                href: "/categoria/complementos/",
               },
               {
-                name: "American Walnut",
-                tag: "Warm · figured",
-                copy: "Bought in single planks from a family mill in Pennsylvania. The grain decides the piece, not the other way around.",
-                color: "#FCE4EC",
+                name: "Hogar",
+                tag: "Para tu espacio",
+                copy: "Tazas, cuadernos, velas y decoración.",
+                color: "var(--pastel-red)",
+                href: "/categoria/hogar/",
               },
-            ].map((material) => (
-              <div class="space-y-3 pt-2 p-6 rounded-3xl transition-all duration-300 hover:scale-105" style={`background: ${material.color}; box-shadow: 0 4px 20px rgba(0,0,0,0.05);`}>
-                <p class="text-[10px] uppercase tracking-[0.3em]" style="color: #9E9E9E;">{material.tag}</p>
-                <h3 class="font-serif text-2xl" style="color: #5D4037;">{material.name}</h3>
-                <p class="text-sm leading-relaxed" style="color: #8D6E63;">{material.copy}</p>
-              </div>
+            ].map((category) => (
+              <a
+                href={category.href}
+                class="group space-y-4 p-8 rounded-3xl transition-all duration-300 hover:scale-[1.02]"
+                style={`background: ${category.color}; box-shadow: 0 8px 30px rgba(0,0,0,0.05);`}
+              >
+                <p class="text-[10px] uppercase tracking-[0.3em]" style="color: var(--faded);">{category.tag}</p>
+                <h3 class="font-serif text-2xl" style="color: var(--ink);">{category.name}</h3>
+                <p class="text-sm leading-relaxed" style="color: var(--faded);">{category.copy}</p>
+                <span class="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] transition-all duration-300 group-hover:translate-x-1" style="color: var(--accent);">
+                  Ver más →
+                </span>
+              </a>
             ))
           }
         </div>
       </div>
     </section>
 
+    <!-- Newsletter -->
     <section class="mx-auto mt-32 max-w-screen-xl px-6 md:mt-48">
-      <div style="border-top: 1px solid #E0E0E0;" class="pt-12">
+      <div style="border-top: 2px solid var(--pastel-mint); padding-top: 2rem;">
         <div class="mx-auto max-w-xl space-y-6 text-center">
-          <p class="text-[11px] uppercase tracking-[0.3em]" style="color: #9E9E9E;">Stay informed</p>
-          <h2 class="text-balance font-serif text-3xl md:text-5xl" style="color: #5D4037;">
-            New pieces, <span class="italic" style="color: #EF9A9A;">one email at a time.</span>
+          <p class="text-[11px] uppercase tracking-[0.3em]" style="color: var(--faded);">Mantente en contacto</p>
+          <h2 class="text-balance font-serif text-3xl md:text-5xl" style="color: var(--ink);">
+            Novedades, <span class="italic" style="color: var(--accent);">un email a la vez.</span>
           </h2>
-          <p class="mx-auto max-w-[52ch] text-sm leading-relaxed" style="color: #8D6E63;">
-            We make slowly. When something is ready — or when we open the books for new commissions
-            — we send a short note.
+          <p class="mx-auto max-w-[52ch] text-sm leading-relaxed" style="color: var(--faded);">
+            Hacemos las cosas con calma. Cuando algo esté listo — o cuando abramos las reservas para nuevos encargos — te enviamos una nota.
           </p>
 
           <form class="space-y-3 pt-4 text-left" data-newsletter-form>
             <div class="flex flex-col gap-3 sm:flex-row">
-              <label class="sr-only" for="first-name">First name</label>
+              <label class="sr-only" for="first-name">Nombre</label>
               <input
                 id="first-name"
                 name="firstName"
                 type="text"
                 required
                 maxlength="80"
-                placeholder="First name"
-                class="flex-1 rounded-full px-5 py-4 text-sm placeholder:opacity-60 focus:outline-none focus:ring-2 transition-all duration-300"
-                style="background: #FFFDE7; color: #5D4037; box-shadow: 0 2px 10px rgba(255, 253, 231, 0.5); --tw-ring-color: #90CAF9;"
+                placeholder="Tu nombre"
+                class="flex-1 rounded-full px-5 py-4 text-sm transition-all duration-300 focus:outline-none focus:ring-2"
+                style="background: var(--pastel-yellow); color: var(--ink); box-shadow: 0 4px 15px rgba(255, 249, 196, 0.4); --tw-ring-color: var(--pastel-blue);"
               />
-              <label class="sr-only" for="email">Email address</label>
+              <label class="sr-only" for="email">Email</label>
               <input
                 id="email"
                 name="email"
                 type="email"
                 required
-                placeholder="your@email.com"
-                class="flex-1 rounded-full px-5 py-4 text-sm placeholder:opacity-60 focus:outline-none focus:ring-2 transition-all duration-300"
-                style="background: #FFFDE7; color: #5D4037; box-shadow: 0 2px 10px rgba(255, 253, 231, 0.5); --tw-ring-color: #90CAF9;"
+                placeholder="tu@email.com"
+                class="flex-1 rounded-full px-5 py-4 text-sm transition-all duration-300 focus:outline-none focus:ring-2"
+                style="background: var(--pastel-yellow); color: var(--ink); box-shadow: 0 4px 15px rgba(255, 249, 196, 0.4); --tw-ring-color: var(--pastel-blue);"
               />
             </div>
             <button
               type="submit"
               class="inline-flex w-full items-center justify-center gap-2 rounded-full px-7 py-4 text-[11px] font-medium uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105 disabled:opacity-50"
-              style="background: linear-gradient(135deg, #A5D6A7 0%, #81C784 100%); color: #1B5E20; box-shadow: 0 4px 15px rgba(165, 214, 167, 0.4);"
+              style="background: var(--pastel-mint); color: var(--ink); box-shadow: 0 4px 20px rgba(200, 230, 201, 0.5);"
               data-newsletter-button
             >
-              Notify me
+              Suscribirme
             </button>
             <p
               class="hidden pt-2 text-center text-sm"
-              style="color: #81C784;"
+              style="color: var(--pastel-mint);"
               data-newsletter-success
               aria-live="polite"
             >
-              You're on the list. We'll be in touch.
+              ¡Estás en la lista! Te contactaremos pronto.
             </p>
           </form>
         </div>
@@ -334,13 +302,13 @@ if (!solo) {
       set:html={JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Organization",
-        name: "Atelier Kō",
-        url: Astro.site?.href ?? "https://atelier-ko-topaz.vercel.app/",
-        slogan: "Furniture, made by hand",
+        name: "Saudade",
+        url: Astro.site?.href ?? "https://saudade-vercel.app/",
+        slogan: "Encuentros en el Camino",
         address: {
           "@type": "PostalAddress",
-          addressRegion: "Småland",
-          addressCountry: "SE",
+          addressRegion: "Granada",
+          addressCountry: "ES",
         },
       })}
     />
@@ -354,11 +322,11 @@ if (!solo) {
         form.addEventListener("submit", (event) => {
           event.preventDefault();
           button.disabled = true;
-          button.textContent = "Saving...";
+          button.textContent = "Guardando...";
           window.setTimeout(() => {
             form.reset();
             button.disabled = false;
-            button.textContent = "Notify me";
+            button.textContent = "Suscribirme";
             success.classList.remove("hidden");
           }, 450);
         });

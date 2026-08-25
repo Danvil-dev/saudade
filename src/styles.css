@@ -114,20 +114,29 @@
   --color-input: var(--line);
   --color-ring: var(--ink);
 
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --color-pastel-yellow: var(--pastel-yellow);
+  --color-pastel-blue: var(--pastel-blue);
+  --color-pastel-red: var(--pastel-red);
+  --color-pastel-mint: var(--pastel-mint);
 }
 
 :root {
-  --base: #f8f7f4;
-  --paper: #f1efea;
-  --ink: #27272a;
-  --faded: #71717a;
-  --accent: #5a2d10;
-  --line: #27272a14;
-  --radius: 12px;
+  --base: #FFFDF7;
+  --paper: #FFF8E1;
+  --ink: #5D4037;
+  --faded: #9E9E9E;
+  --accent: #EF9A9A;
+  --line: #FFE0B2;
+  --radius: 16px;
+  --pastel-yellow: #FFF9C4;
+  --pastel-blue: #BBDEFB;
+  --pastel-red: #FFCDD2;
+  --pastel-mint: #C8E6C9;
 }
 
 @layer base {
