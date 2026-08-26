@@ -105,10 +105,10 @@ if (Astro.request.method == "POST") {
                         Marcar como pagado
                       </button>
                     </form>) : <></>}
-                    <form method="post">
+                    <form method="post" class="delete-form">
                       <input type="hidden" name="action" value="delete">
                       <input type="hidden" name="bookingId" value={booking.id}>
-                      <button type="submit" class="bg-red-400 hover:bg-red-600" onsubmit="return confirm('¿Seguro que quiere eliminar esta reserva?');">Eliminar reserva</button>
+                      <button type="submit" class="bg-red-400 hover:bg-red-600 text-sm p-1.5 mb-1 rounded-md me-2">Eliminar reserva</button>
                     </form>
                     
                     </div>
@@ -200,6 +200,52 @@ if (Astro.request.method == "POST") {
         // Opcional: Cambiamos el estilo y texto para dar feedback visual
         submitButton.dataset.originalText = submitButton.innerText;
         submitButton.innerText = "Actualizando...";
+        submitButton.classList.add("opacity-50", "cursor-not-allowed");
+      }
+    });
+  });
+</script>
+
+<script>
+  import Swal from 'sweetalert2';
+
+  document.querySelectorAll(".delete-form").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      Swal.fire({
+        title: "¿Quiere borrar esta reserva?",
+        text: "Esta acción es irreversible",
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonText: "Eliminar",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          (form as HTMLFormElement).submit();
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  // Escuchamos el envío de cualquier formulario en la página
+  document.querySelectorAll("form").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+
+      // Si el usuario cancela la confirmación, no hacemos nada
+      if (event.defaultPrevented) return;
+
+      const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+
+      if (submitButton) {
+        // Desactivamos el botón para evitar más pulsaciones
+        submitButton.disabled = true;
+
+        // Cambiamos el estilo y texto para dar feedback visual
+        submitButton.dataset.originalText = submitButton.innerText;
+        submitButton.innerText = "Guardando...";
         submitButton.classList.add("opacity-50", "cursor-not-allowed");
       }
     });

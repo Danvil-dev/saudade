@@ -17,6 +17,7 @@
     "@tailwindcss/postcss": "^4.3.1",
     "accessible-astro-components": "^5.7.1",
     "astro": "^6.4.8",
+    "sweetalert2": "^11.26.25",
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
