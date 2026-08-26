@@ -108,7 +108,7 @@ if (Astro.request.method == "POST") {
                     <form method="post">
                       <input type="hidden" name="action" value="delete">
                       <input type="hidden" name="bookingId" value={booking.id}>
-                      <button type="submit" class="bg-red-400 hover:bg-red-600 text-sm p-1.5 mb-1 rounded-md me-2" onsubmit="return confirm('¿Seguro que quiere eliminar esta reserva?');">Eliminar reserva</button>
+                      <button type="submit" class="bg-red-400 hover:bg-red-600" onsubmit="return confirm('¿Seguro que quiere eliminar esta reserva?');">Eliminar reserva</button>
                     </form>
                     
                     </div>
