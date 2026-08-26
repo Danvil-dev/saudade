@@ -188,7 +188,11 @@ export interface ItemsBooking {
   price: number;
 }
 
-const createBooking = async (supabaseClient: any, booking: Booking, cartItems: ItemsBooking[]) => {
+export const createBooking = async (
+  supabaseClient: any,
+  booking: Booking,
+  cartItems: ItemsBooking[],
+) => {
   try {
     const { data, error } = await supabaseClient
       .from("bookings")
@@ -232,7 +236,7 @@ const createBooking = async (supabaseClient: any, booking: Booking, cartItems: I
   }
 };
 
-const editBooking = async (supabaseClient: any, bookingId: number, paid: boolean) => {
+export const editBooking = async (supabaseClient: any, bookingId: number, paid: boolean) => {
   try {
     const { data, error } = await supabaseClient
       .from("bookings")
@@ -252,34 +256,19 @@ const editBooking = async (supabaseClient: any, bookingId: number, paid: boolean
   }
 };
 
-const getPaidBookings = async (supabaseClient: any) => {
-  const { data, error } = await supabaseClient.from("bookings").select("*").eq("paid", true);
+export const getBookings = async (supabaseClient: any) => {
+  const { data, error } = await supabaseClient.from("bookings").select("*");
 
   if (error) {
-    console.error("[getPaidBookings] Error al conseguir las reservas pagadas");
+    console.error("[getBookings] Error al conseguir las reservas pagadas");
     return [];
   }
 
   return { success: true, data };
 };
 
-const getUnpaidBookings = async (supabaseClient: any) => {
-  const { data, error } = await supabaseClient.from("bookings").select("*").eq("paid", false);
-
-  if (error) {
-    console.error("[getPaidBookings] Error al conseguir las reservas pagadas");
-    return [];
-  }
-
-  return { success: true, data };
-};
-
-const deleteBooking = async (supabaseClient: any, bookingId: number) => {
-  const { data, error } = await supabaseClient
-    .from("bookings")
-    .delete()
-    .eq("id", bookingId)
-    .select();
+export const deleteBooking = async (supabaseClient: any, bookingId: number) => {
+  const { data, error } = await supabaseClient.from("bookings").delete().eq("id", bookingId);
 
   if (error) {
     console.error("Error al eliminar la reserva: ", error.message);
@@ -289,7 +278,7 @@ const deleteBooking = async (supabaseClient: any, bookingId: number) => {
   return { success: true, data };
 };
 
-const autoDeletePaidBokings = async (supabaseClient: any, daysOld: number = 30) => {
+export const autoDeletePaidBokings = async (supabaseClient: any, daysOld: number = 30) => {
   try {
     const limitDate = new Date();
     limitDate.setDate(limitDate.getDate() - daysOld);
@@ -298,8 +287,7 @@ const autoDeletePaidBokings = async (supabaseClient: any, daysOld: number = 30) 
       .from("bookings")
       .delete()
       .eq("paid", true)
-      .lt("created_at", limitDate.toISOString())
-      .select();
+      .lt("created_at", limitDate.toISOString());
 
     if (error) {
       console.error("Error al eliminar reservas pagadas antiguas:", error.message);
@@ -312,3 +300,28 @@ const autoDeletePaidBokings = async (supabaseClient: any, daysOld: number = 30) 
     return { success: false, error: e?.message || "Error inesperado" };
   }
 };
+
+export const getItemsOfBooking = async (supabaseClient: any, bookingId: number) => {
+  const { data, error } = await supabaseClient
+    .from("productsBooking")
+    .select("*, products(*)")
+    .eq("booking_id", bookingId)
+    .select();
+
+  if (error) {
+    console.error("[getItemsOfBooking] Error al conseguir los productos: ", error.message);
+    return [];
+  }
+
+  return data || [];
+};
+
+export function productForJson(product: Product) {
+  return {
+    name: product.name,
+    description: product.description,
+    category: product.category,
+    image: product.image,
+    price: product.price,
+  };
+}

@@ -127,5 +127,20 @@ const productUrl = new URL(`/products/${product.name}`, Astro.site ?? Astro.url.
         },
       })}
     />
+    <script is:inline>
+      const addButton = document.querySelector("[data-add-to-cart]");
+      if (addButton) {
+        const originalText = addButton.textContent;
+        let timer;
+        addButton.addEventListener("click", () => {
+          window.SaudadeCart.add(addButton.dataset.addToCart, 1);
+          addButton.textContent = "Añadido a tu cesta →";
+          window.clearTimeout(timer);
+          timer = window.setTimeout(() => {
+            addButton.textContent = originalText;
+          }, 1800);
+        });
+      }
+    </script>
   </main>
 </BaseLayout>

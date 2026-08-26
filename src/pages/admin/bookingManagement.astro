@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getSupabaseServer } from "@/db/supabaseServer";
+import { getBookings } from "@/db/dbFunctions.js";
 
 export const prerender = false;
 const supabase = getSupabaseServer(Astro);
@@ -12,6 +13,126 @@ const {
 if (!user || error) {
   return Astro.redirect("/login");
 }
+
+const statusFilter = Astro.url.searchParams.get("status") || "all";
+
+const { data: allBookings } = await supabase
+  .from("bookings")
+  .select("*, productsBooking(*, products(*))")
+  .order("created_at", { ascending: false });
+
+const bookingsList = allBookings || [];
+
+const filteredBookings = bookingsList.filter((booking) => {
+  if (statusFilter === "paid") return booking.paid === true;
+  if (statusFilter === "unpaid") return booking.paid === false;
+  return true;
+});
 ---
 
-<BaseLayout> Gestion de reservas </BaseLayout>
+<BaseLayout title="Gestión de Reservas">
+  <main class="mx-auto max-w-screen-xl px-6 py-12">
+    <h2 class="font-serif text-3xl md:text-4xl">Gestión de Reservas</h2>
+
+    <div class="my-8 flex flex-wrap items-center gap-2">
+      <a href="?status=all" class={`bookings-chip ${statusFilter === "all" ? "is-active" : ""}`}>
+        Todas ({bookingsList.length})
+      </a>
+      <a href="?status=paid" class={`bookings-chip ${statusFilter === "paid" ? "is-active" : ""}`}>
+        Pagadas ({bookingsList.filter((b) => b.paid).length})
+      </a>
+      <a
+        href="?status=unpaid"
+        class={`bookings-chip ${statusFilter === "unpaid" ? "is-active" : ""}`}
+      >
+        No pagadas ({bookingsList.filter((bookings) => !bookings.paid).length})
+      </a>
+    </div>
+
+    {
+      filteredBookings.length === 0 ? (
+        <p class="py-12 text-center text-faded">Aún no hay reservas.</p>
+      ) : (
+        <div class="space-y-6">
+          {filteredBookings.map((booking) => (
+            <article class="rounded-xl border border-line p-6 shadow-sm">
+              <div class="flex flex-wrap items-center justify-between gap-4 border-b border-line pb-4">
+                <div>
+                  <span class="text-xs uppercase tracking-widest text-faded">
+                    Reserva #{booking.id}
+                  </span>
+                  <h3 class="font-serif text-xl font-bold">{booking.name}</h3>
+                  <p class="text-sm text-faded">
+                    {booking.email} — Tel: {booking.number}
+                  </p>
+                </div>
+
+                <div class="text-right">
+                  <span
+                    class={`inline-block rounded-full px-3 py-1 text-xs font-medium ${
+                      booking.paid ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"
+                    }`}
+                  >
+                    {booking.paid ? "Pagado" : "Pendiente de pago"}
+                  </span>
+                  <p class="mt-2 font-serif text-xl font-bold">{booking.total_price} €</p>
+                </div>
+              </div>
+
+              <div class="mt-4 space-y-3">
+                <h4 class="text-xs uppercase tracking-wider text-faded">Productos asociados:</h4>
+                <ul class="divide-y divide-line">
+                  {booking.productsBooking?.map((item: any) => (
+                    <li class="flex items-center justify-between py-2 text-sm">
+                      <div class="flex items-center gap-3">
+                        {item.products?.image && (
+                          <img
+                            src={item.products.image}
+                            alt={item.products.name}
+                            class="h-10 w-10 rounded object-cover"
+                          />
+                        )}
+                        <div>
+                          <p class="font-medium">{item.products?.name ?? "Producto eliminado"}</p>
+                          <p class="text-xs text-faded">{item.price} € / ud.</p>
+                        </div>
+                      </div>
+                      <div class="text-right font-medium">
+                        x{item.quantity} — {(item.price * item.quantity).toFixed(2)} €
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+          ))}
+        </div>
+      )
+    }
+  </main>
+</BaseLayout>
+
+<style>
+  .bookings-chip {
+    border-radius: 9999px;
+    padding: 0.375rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1rem;
+    color: var(--ink);
+    background: var(--pastel-yellow);
+    box-shadow: 0 2px 10px rgba(255, 249, 196, 0.4);
+    transition: all 180ms ease;
+  }
+
+  .bookings-chip:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(255, 249, 196, 0.6);
+  }
+
+  .bookings-chip.is-active {
+    background: var(--pastel-blue);
+    color: var(--ink);
+    box-shadow: 0 4px 20px rgba(187, 222, 251, 0.5);
+  }
+</style>

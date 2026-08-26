@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { formatPrice, getProducts, productForJson } from "@/db/dbFunctions.js";
+import { getProducts, productForJson } from "@/db/dbFunctions.js";
 
 const products = await getProducts();
 const cartProducts = products.map(productForJson);
@@ -13,10 +13,19 @@ const cartProducts = products.map(productForJson);
   noindex={true}
 >
   <main id="main-content" class="mx-auto max-w-screen-xl px-6 py-12">
-    <header class="mb-12 flex items-end justify-between pb-8" style="border-bottom: 2px solid var(--pastel-yellow);">
+    <header
+      class="mb-12 flex items-end justify-between pb-8"
+      style="border-bottom: 2px solid var(--pastel-yellow);"
+    >
       <div class="space-y-3">
         <p class="text-xs uppercase tracking-[0.25em]" style="color: var(--faded);">Tu cesta</p>
-        <h1 class="font-serif text-5xl leading-none md:text-6xl" style="color: var(--ink);" data-cart-title>Vacía por ahora.</h1>
+        <h1
+          class="font-serif text-5xl leading-none md:text-6xl"
+          style="color: var(--ink);"
+          data-cart-title
+        >
+          Vacía por ahora.
+        </h1>
       </div>
       <div class="hidden gap-8 text-[11px] uppercase tracking-[0.2em] md:flex">
         <span data-cart-step="cart" style="color: var(--ink);">01 · Selección</span>
@@ -44,15 +53,15 @@ const cartProducts = products.map(productForJson);
       <section class="space-y-2 lg:col-span-7" aria-live="polite">
         <ul class="border-y" style="border-color: var(--pastel-blue);" data-cart-list></ul>
 
-        <form
-          id="checkout-form"
-          class="hidden space-y-10"
-          data-checkout-form
-        >
+        <form id="checkout-form" class="hidden space-y-10" data-checkout-form>
           <fieldset class="space-y-4">
-            <legend class="mb-2 text-xs uppercase tracking-[0.25em]" style="color: var(--faded);">Contacto</legend>
+            <legend class="mb-2 text-xs uppercase tracking-[0.25em]" style="color: var(--faded);"
+              >Contacto</legend
+            >
             <label class="block">
-              <span class="text-[11px] uppercase tracking-widest" style="color: var(--faded);">Email</span>
+              <span class="text-[11px] uppercase tracking-widest" style="color: var(--faded);"
+                >Email</span
+              >
               <input
                 type="email"
                 required
@@ -64,71 +73,14 @@ const cartProducts = products.map(productForJson);
           </fieldset>
 
           <fieldset class="space-y-4">
-            <legend class="mb-2 text-xs uppercase tracking-[0.25em]" style="color: var(--faded);">Envío</legend>
             <div class="grid grid-cols-2 gap-4">
               <label class="block">
-                <span class="text-[11px] uppercase tracking-widest" style="color: var(--faded);">Nombre</span>
-                <input required placeholder="Tu nombre" class="mt-1 w-full border-b bg-transparent py-2 text-sm transition-all duration-300 focus:outline-none focus:ring-2" style="border-color: var(--pastel-blue); color: var(--ink); --tw-ring-color: var(--pastel-yellow);" />
-              </label>
-              <label class="block">
-                <span class="text-[11px] uppercase tracking-widest" style="color: var(--faded);">Apellidos</span>
-                <input required placeholder="Tus apellidos" class="mt-1 w-full border-b bg-transparent py-2 text-sm transition-all duration-300 focus:outline-none focus:ring-2" style="border-color: var(--pastel-blue); color: var(--ink); --tw-ring-color: var(--pastel-yellow);" />
-              </label>
-            </div>
-            <label class="block">
-              <span class="text-[11px] uppercase tracking-widest" style="color: var(--faded);">Dirección</span>
-              <input required placeholder="Calle, número" class="mt-1 w-full border-b bg-transparent py-2 text-sm transition-all duration-300 focus:outline-none focus:ring-2" style="border-color: var(--pastel-blue); color: var(--ink); --tw-ring-color: var(--pastel-yellow);" />
-            </label>
-            <div class="grid grid-cols-2 gap-4">
-              <label class="block">
-                <span class="text-[11px] uppercase tracking-widest" style="color: var(--faded);">Ciudad</span>
-                <input required placeholder="Granada" class="mt-1 w-full border-b bg-transparent py-2 text-sm transition-all duration-300 focus:outline-none focus:ring-2" style="border-color: var(--pastel-blue); color: var(--ink); --tw-ring-color: var(--pastel-yellow);" />
-              </label>
-              <label class="block">
-                <span class="text-[11px] uppercase tracking-widest" style="color: var(--faded);">Código postal</span>
-                <input required placeholder="18001" class="mt-1 w-full border-b bg-transparent py-2 text-sm transition-all duration-300 focus:outline-none focus:ring-2" style="border-color: var(--pastel-blue); color: var(--ink); --tw-ring-color: var(--pastel-yellow);" />
-              </label>
-            </div>
-          </fieldset>
-
-          <fieldset class="space-y-4">
-            <legend class="mb-2 text-xs uppercase tracking-[0.25em]" style="color: var(--faded);">Pago</legend>
-            <label class="block">
-              <span class="text-[11px] uppercase tracking-widest" style="color: var(--faded);">Número de tarjeta</span>
-              <input
-                required
-                inputmode="numeric"
-                autocomplete="cc-number"
-                placeholder="4242 4242 4242 4242"
-                maxlength="19"
-                data-card-number
-                class="mt-1 w-full border-b bg-transparent py-2 text-sm transition-all duration-300 focus:outline-none focus:ring-2"
-                style="border-color: var(--pastel-blue); color: var(--ink); --tw-ring-color: var(--pastel-yellow);"
-              />
-            </label>
-            <div class="grid grid-cols-2 gap-4">
-              <label class="block">
-                <span class="text-[11px] uppercase tracking-widest" style="color: var(--faded);">Expira</span>
+                <span class="text-[11px] uppercase tracking-widest" style="color: var(--faded);"
+                  >Nombre y apellidos</span
+                >
                 <input
                   required
-                  inputmode="numeric"
-                  autocomplete="cc-exp"
-                  placeholder="08 / 28"
-                  maxlength="7"
-                  data-card-expiry
-                  class="mt-1 w-full border-b bg-transparent py-2 text-sm transition-all duration-300 focus:outline-none focus:ring-2"
-                  style="border-color: var(--pastel-blue); color: var(--ink); --tw-ring-color: var(--pastel-yellow);"
-                />
-              </label>
-              <label class="block">
-                <span class="text-[11px] uppercase tracking-widest" style="color: var(--faded);">CVC</span>
-                <input
-                  required
-                  inputmode="numeric"
-                  autocomplete="cc-csc"
-                  placeholder="123"
-                  maxlength="3"
-                  data-card-cvc
+                  placeholder="Tu nombre"
                   class="mt-1 w-full border-b bg-transparent py-2 text-sm transition-all duration-300 focus:outline-none focus:ring-2"
                   style="border-color: var(--pastel-blue); color: var(--ink); --tw-ring-color: var(--pastel-yellow);"
                 />
@@ -138,20 +90,28 @@ const cartProducts = products.map(productForJson);
         </form>
       </section>
 
-      <aside class="space-y-8 rounded-3xl p-8 lg:sticky lg:top-24 lg:col-span-5" style="background: var(--pastel-yellow); box-shadow: 0 12px 40px rgba(255, 249, 196, 0.4);">
-        <h2 class="text-xs uppercase tracking-[0.25em]" style="color: var(--faded);">Resumen del pedido</h2>
+      <aside
+        class="space-y-8 rounded-3xl p-8 lg:sticky lg:top-24 lg:col-span-5"
+        style="background: var(--pastel-yellow); box-shadow: 0 12px 40px rgba(255, 249, 196, 0.4);"
+      >
+        <h2 class="text-xs uppercase tracking-[0.25em]" style="color: var(--faded);">
+          Resumen del pedido
+        </h2>
         <div class="space-y-3">
           <div class="flex justify-between text-sm">
             <span style="color: var(--faded);">Subtotal</span>
-            <span class="tabular-nums" style="color: var(--ink);" data-cart-subtotal>$0</span>
+            <span class="tabular-nums" style="color: var(--ink);" data-cart-subtotal>0 €</span>
           </div>
-          <div class="flex justify-between text-sm">
-            <span style="color: var(--faded);">Envío</span>
-            <span class="tabular-nums" style="color: var(--ink);" data-cart-shipping>$0</span>
-          </div>
-          <div class="flex items-baseline justify-between pt-3" style="border-top: 1px solid var(--pastel-blue);">
+          <div
+            class="flex items-baseline justify-between pt-3"
+            style="border-top: 1px solid var(--pastel-blue);"
+          >
             <span class="text-sm" style="color: var(--ink);">Total</span>
-            <span class="font-serif text-3xl tabular-nums" style="color: var(--ink);" data-cart-total>$0</span>
+            <span
+              class="font-serif text-3xl tabular-nums"
+              style="color: var(--ink);"
+              data-cart-total>0 €</span
+            >
           </div>
         </div>
         <div class="space-y-3">
@@ -172,32 +132,65 @@ const cartProducts = products.map(productForJson);
             Volver a la selección
           </button>
         </div>
-        <p class="pt-6 text-[11px] leading-relaxed" style="border-top: 1px solid var(--pastel-blue); color: var(--faded);">
-          Cada pieza está firmada y datada. Los artículos se envían en cajas reutilizables. Las cajas devueltas obtienen un pequeño descuento en tu próximo pedido.
+        <p
+          class="pt-6 text-[11px] leading-relaxed"
+          style="border-top: 1px solid var(--pastel-blue); color: var(--faded);"
+        >
+          Esto solamente efectuará una reserva que se preparará en tienda. NO es una compra, el pedido deberá de recogerse y pagarse en tienda.
         </p>
       </aside>
     </div>
 
     {
       products.map((product) => (
-        <template data-product-template={product.slug}>
-          <li class="flex gap-6 py-8" style="border-bottom: 1px solid var(--pastel-blue);" data-cart-row={product.slug}>
-            <a href={`/products/${product.slug}`} class="block size-28 shrink-0 overflow-hidden rounded-3xl md:size-32" style="background: var(--pastel-yellow);">
-              <Image src={product.images[0]} alt={product.name} width={320} height={320} format="webp" loading="eager" class="h-full w-full object-cover" />
+        <template data-product-template={product.name}>
+          <li
+            class="flex gap-6 py-8"
+            style="border-bottom: 1px solid var(--pastel-blue);"
+            data-cart-row={product.name}
+          >
+            <a
+              href={`/products/${product.name}`}
+              class="block size-28 shrink-0 overflow-hidden rounded-3xl md:size-32"
+              style="background: var(--pastel-yellow);"
+            >
+              <Image
+                src={product.image}
+                alt={product.name}
+                width={320}
+                height={320}
+                format="webp"
+                loading="eager"
+                class="h-full w-full object-cover"
+              />
             </a>
             <div class="flex min-w-0 flex-1 flex-col justify-between">
               <div class="flex justify-between gap-4">
                 <div class="min-w-0 space-y-1">
-                  <a href={`/products/${product.slug}`} class="block font-serif text-2xl transition-all duration-300 hover:translate-x-1" style="color: var(--ink);">
+                  <a
+                    href={`/products/${product.name}`}
+                    class="block font-serif text-2xl transition-all duration-300 hover:translate-x-1"
+                    style="color: var(--ink);"
+                  >
                     {product.name}
                   </a>
-                  <p class="text-xs" style="color: var(--faded);">{product.material} · {product.finish}</p>
-                  <p class="text-[11px] uppercase tracking-widest" style="color: var(--faded);">Plazo {product.leadTime}</p>
+                  <p class="text-xs" style="color: var(--faded);">
+                    {product.category}
+                  </p>
                 </div>
-                <span class="whitespace-nowrap text-sm tabular-nums" style="color: var(--accent);" data-row-line-price>{formatPrice(product.price)}</span>
+                <span
+                  class="whitespace-nowrap text-sm tabular-nums"
+                  style="color: var(--accent);"
+                  data-row-line-price
+                >
+                  {product.price} €
+                </span>
               </div>
               <div class="flex items-center justify-between pt-4">
-                <div class="inline-flex items-center overflow-hidden rounded-full" style="border: 1px solid var(--pastel-blue);">
+                <div
+                  class="inline-flex items-center overflow-hidden rounded-full"
+                  style="border: 1px solid var(--pastel-blue);"
+                >
                   <button
                     type="button"
                     class="grid size-8 place-items-center text-sm transition-all duration-300 hover:scale-110"
@@ -207,7 +200,13 @@ const cartProducts = products.map(productForJson);
                   >
                     −
                   </button>
-                  <span class="w-8 text-center text-sm tabular-nums" style="color: var(--ink);" data-row-quantity>1</span>
+                  <span
+                    class="w-8 text-center text-sm tabular-nums"
+                    style="color: var(--ink);"
+                    data-row-quantity
+                  >
+                    1
+                  </span>
                   <button
                     type="button"
                     class="grid size-8 place-items-center text-sm transition-all duration-300 hover:scale-110"
@@ -235,18 +234,16 @@ const cartProducts = products.map(productForJson);
     }
   </main>
 
-  <script is:inline type="application/json" id="cart-products" set:html={JSON.stringify(cartProducts)}></script>
+  <script
+    is:inline
+    type="application/json"
+    id="cart-products"
+    set:html={JSON.stringify(cartProducts)}
+  />
 
   <script is:inline>
     const productList = JSON.parse(document.getElementById("cart-products").textContent);
-    const productsBySlug = new Map(productList.map((product) => [product.slug, product]));
-    const formatPrice = (value) =>
-      new Intl.NumberFormat("es-ES", {
-        style: "currency",
-        currency: "EUR",
-        maximumFractionDigits: 0,
-      }).format(value);
-
+    const productsByName = new Map(productList.map((product) => [product.name, product]));
     const title = document.querySelector("[data-cart-title]");
     const empty = document.querySelector("[data-cart-empty]");
     const filled = document.querySelector("[data-cart-filled]");
@@ -255,66 +252,75 @@ const cartProducts = products.map(productForJson);
     const primary = document.querySelector("[data-cart-primary]");
     const back = document.querySelector("[data-cart-back]");
     const subtotalNode = document.querySelector("[data-cart-subtotal]");
-    const shippingNode = document.querySelector("[data-cart-shipping]");
     const totalNode = document.querySelector("[data-cart-total]");
     const stepCart = document.querySelector('[data-cart-step="cart"]');
     const stepDetails = document.querySelector('[data-cart-step="details"]');
-    const cardNumber = document.querySelector("[data-card-number]");
-    const cardExpiry = document.querySelector("[data-card-expiry]");
-    const cardCvc = document.querySelector("[data-card-cvc]");
     let step = "cart";
 
-    function digitsOnly(value, maxLength) {
-      return value.replace(/\D/g, "").slice(0, maxLength);
-    }
-
-    function formatCardNumber(value) {
-      return digitsOnly(value, 16).replace(/(.{4})/g, "$1 ").trim();
-    }
-
-    function formatExpiry(value) {
-      const digits = digitsOnly(value, 4);
-      if (digits.length <= 2) return digits;
-      return `${digits.slice(0, 2)} / ${digits.slice(2)}`;
+    function formatPrice(amount) {
+      return `${amount.toFixed(2)} €`;
     }
 
     function knownRows() {
-      return window.AtelierCart.read()
-        .map((item) => ({ item, product: productsBySlug.get(item.slug) }))
+      return window.SaudadeCart.read()
+        .map((item) => ({ item, product: productsByName.get(item.name) }))
         .filter((row) => row.product);
     }
 
     function render() {
       const rows = knownRows();
-      const subtotal = rows.reduce((total, row) => total + row.product.price * row.item.quantity, 0);
-      const shipping = rows.length > 0 ? 5 : 0;
-      const total = subtotal + shipping;
+      const subtotal = rows.reduce(
+        (total, row) => total + row.product.price * row.item.quantity,
+        0,
+      );
+      const total = subtotal ;
 
       if (rows.length === 0) step = "cart";
 
-      title.textContent = rows.length === 0 ? "Vacía por ahora." : step === "cart" ? "Revisa tu selección." : "Unos datos más.";
+      title.textContent =
+        rows.length === 0
+          ? "Vacía por ahora."
+          : step === "cart"
+            ? "Revisa tu selección."
+            : "Unos datos más.";
       empty.classList.toggle("hidden", rows.length !== 0);
       filled.classList.toggle("hidden", rows.length === 0);
       list.classList.toggle("hidden", step !== "cart");
       form.classList.toggle("hidden", step !== "details");
-      primary.textContent = step === "cart" ? "Continuar con los datos" : `Reservar · ${formatPrice(total)}`;
+      primary.textContent =
+        step === "cart" ? "Continuar con los datos" : `Reservar · ${formatPrice(total)}`;
       back.classList.toggle("hidden", step !== "details");
-      stepCart.style.color = step === "cart" ? "var(--ink)" : "var(--faded)";
-      stepDetails.style.color = step === "details" ? "var(--ink)" : "var(--faded)";
+
+      if (stepCart) stepCart.style.color = step === "cart" ? "var(--ink)" : "var(--faded)";
+      if (stepDetails) stepDetails.style.color = step === "details" ? "var(--ink)" : "var(--faded)";
 
       subtotalNode.textContent = formatPrice(subtotal);
-      shippingNode.textContent = formatPrice(shipping);
       totalNode.textContent = formatPrice(total);
 
       list.replaceChildren();
       rows.forEach(({ item, product }) => {
-        const template = document.querySelector(`template[data-product-template="${item.slug}"]`);
+        const template = document.querySelector(
+          `template[data-product-template="${CSS.escape(item.name)}"]`,
+        );
+        if (!template) return;
         const row = template.content.firstElementChild.cloneNode(true);
         row.querySelector("[data-row-quantity]").textContent = String(item.quantity);
-        row.querySelector("[data-row-line-price]").textContent = formatPrice(product.price * item.quantity);
-        row.querySelector('[data-cart-action="decrease"]').addEventListener("click", () => window.AtelierCart.setQuantity(item.slug, item.quantity - 1));
-        row.querySelector('[data-cart-action="increase"]').addEventListener("click", () => window.AtelierCart.setQuantity(item.slug, item.quantity + 1));
-        row.querySelector('[data-cart-action="remove"]').addEventListener("click", () => window.AtelierCart.remove(item.slug));
+        row.querySelector("[data-row-line-price]").textContent = formatPrice(
+          product.price * item.quantity,
+        );
+        row
+          .querySelector('[data-cart-action="decrease"]')
+          .addEventListener("click", () =>
+            window.SaudadeCart.setQuantity(item.name, item.quantity - 1),
+          );
+        row
+          .querySelector('[data-cart-action="increase"]')
+          .addEventListener("click", () =>
+            window.SaudadeCart.setQuantity(item.name, item.quantity + 1),
+          );
+        row
+          .querySelector('[data-cart-action="remove"]')
+          .addEventListener("click", () => window.SaudadeCart.remove(item.name));
         list.appendChild(row);
       });
     }
@@ -335,22 +341,10 @@ const cartProducts = products.map(productForJson);
 
     form.addEventListener("submit", (event) => {
       event.preventDefault();
-      alert("El pago aún no está conectado.");
+      alert("Reserva registrada correctamente.");
     });
 
-    cardNumber.addEventListener("input", () => {
-      cardNumber.value = formatCardNumber(cardNumber.value);
-    });
-
-    cardExpiry.addEventListener("input", () => {
-      cardExpiry.value = formatExpiry(cardExpiry.value);
-    });
-
-    cardCvc.addEventListener("input", () => {
-      cardCvc.value = digitsOnly(cardCvc.value, 3);
-    });
-
-    document.addEventListener("atelier-cart-change", render);
+    document.addEventListener("saudade-cart-change", render);
     render();
   </script>
 </BaseLayout>

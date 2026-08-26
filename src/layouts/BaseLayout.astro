@@ -13,7 +13,9 @@ const {
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
-const ogImage = image ? new URL(image.src ?? image, Astro.site ?? Astro.url.origin).href : undefined;
+const ogImage = image
+  ? new URL(image.src ?? image, Astro.site ?? Astro.url.origin).href
+  : undefined;
 ---
 
 <!doctype html>
@@ -41,71 +43,45 @@ const ogImage = image ? new URL(image.src ?? image, Astro.site ?? Astro.url.orig
     {ogImage && <meta name="twitter:image" content={ogImage} />}
 
     <script is:inline>
-      (() => {
-        const storageKey = "atelier-ko-cart";
+      const CART_KEY = "saudade:cart";
 
-        function readCart() {
+      window.SaudadeCart = {
+        read() {
           try {
-            return JSON.parse(window.localStorage.getItem(storageKey) || "[]");
+            return JSON.parse(localStorage.getItem(CART_KEY) || "[]");
           } catch {
             return [];
           }
-        }
-
-        function writeCart(items) {
-          window.localStorage.setItem(storageKey, JSON.stringify(items));
-          document.dispatchEvent(new CustomEvent("atelier-cart-change", { detail: items }));
-        }
-
-        function count(items = readCart()) {
-          return items.reduce((total, item) => total + Number(item.quantity || 0), 0);
-        }
-
-        function updateBadges() {
-          const total = count();
-          document.querySelectorAll("[data-cart-count]").forEach((node) => {
-            node.textContent = `(${total})`;
-          });
-          document.querySelectorAll("[data-cart-label]").forEach((node) => {
-            node.setAttribute("aria-label", `Cart, ${total} ${total === 1 ? "item" : "items"}`);
-          });
-        }
-
-        window.AtelierCart = {
-          read: readCart,
-          write: writeCart,
-          count,
-          add(slug, quantity = 1) {
-            const items = readCart();
-            const existing = items.find((item) => item.slug === slug);
-            if (existing) {
-              existing.quantity += quantity;
-              writeCart(items);
-              return;
-            }
-            writeCart([...items, { slug, quantity }]);
-          },
-          remove(slug) {
-            writeCart(readCart().filter((item) => item.slug !== slug));
-          },
-          setQuantity(slug, quantity) {
-            if (quantity <= 0) {
-              this.remove(slug);
-              return;
-            }
-            writeCart(readCart().map((item) => (item.slug === slug ? { ...item, quantity } : item)));
-          },
-          updateBadges,
-        };
-
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", updateBadges);
-        } else {
-          updateBadges();
-        }
-        window.addEventListener("storage", updateBadges);
-        document.addEventListener("atelier-cart-change", updateBadges);
-      })();
+        },
+        save(cart) {
+          localStorage.setItem(CART_KEY, JSON.stringify(cart));
+          document.dispatchEvent(new CustomEvent("saudade-cart-change"));
+        },
+        add(name, quantity = 1) {
+          const cart = this.read();
+          const existing = cart.find((item) => item.name === name);
+          if (existing) {
+            existing.quantity += quantity;
+          } else {
+            cart.push({ name, quantity });
+          }
+          this.save(cart);
+        },
+        setQuantity(name, quantity) {
+          let cart = this.read();
+          if (quantity <= 0) {
+            cart = cart.filter((item) => item.name !== name);
+          } else {
+            const item = cart.find((i) => i.name === name);
+            if (item) item.quantity = quantity;
+          }
+          this.save(cart);
+        },
+        remove(name) {
+          const cart = this.read().filter((item) => item.name !== name);
+          this.save(cart);
+        },
+      };
     </script>
   </head>
   <body class="bg-base text-ink">
