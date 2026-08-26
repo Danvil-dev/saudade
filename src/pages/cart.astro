@@ -1,10 +1,67 @@
 ---
 import { Image } from "astro:assets";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { getProducts, productForJson } from "@/db/dbFunctions.js";
+import {
+  createBooking,
+  getProducts,
+  productForJson,
+  supabase,
+  type ItemsBooking,
+} from "@/db/dbFunctions.js";
 
 const products = await getProducts();
 const cartProducts = products.map(productForJson);
+let serverError = "";
+
+if (Astro.request.method === "POST") {
+  try {
+    const formData = await Astro.request.formData();
+
+    const name = formData.get("name")?.toString().trim() || "";
+    const email = formData.get("email")?.toString().trim() || "";
+    const telefono = formData.get("telefono")?.toString().trim() || "";
+    const cartProductsRaw = formData.get("cart_products")?.toString() || "[]";
+
+    const phoneFormatted = Number(telefono.replace(/\D/g, "")) || 0;
+
+    const userCart: Array<{ name: string; quantity: number }> = JSON.parse(cartProductsRaw);
+
+    const dbProductsMap = new Map(products.map((product) => [product.name, product]));
+    let totalPrice = 0;
+    const itemsToBook: ItemsBooking[] = [];
+
+    for (const item of userCart) {
+      const product = dbProductsMap.get(item.name);
+      if (product) {
+        totalPrice += product.price * item.quantity;
+        itemsToBook.push({
+          product_id: product.id,
+          quantity: item.quantity,
+          price: product.price,
+        });
+      }
+    }
+
+    if (itemsToBook.length > 0) {
+      const result = await createBooking(
+        supabase,
+        { total_price: totalPrice, paid: false, name, email, number: phoneFormatted },
+        itemsToBook,
+      );
+
+      if (result.success) {
+        return Astro.redirect("/catalog?booking=success");
+      } else {
+        serverError = result.error || "No se pudo procesar la reserva en la base de datos.";
+      }
+    } else {
+      serverError = "El carrito no contiene productos válidos.";
+    }
+  } catch (e: any) {
+    console.error("Error al hacer la reserva:", e);
+    serverError = "Ocurrió un error inesperado al procesar la reserva.";
+  }
+}
 ---
 
 <BaseLayout
@@ -34,6 +91,14 @@ const cartProducts = products.map(productForJson);
       </div>
     </header>
 
+    {
+      serverError && (
+        <div class="mb-8 rounded-2xl bg-red-100 p-4 text-center text-sm text-red-700">
+          {serverError}
+        </div>
+      )
+    }
+
     <div class="py-32 text-center" data-cart-empty>
       <div class="space-y-6">
         <p class="mx-auto max-w-md" style="color: var(--faded);">
@@ -53,7 +118,31 @@ const cartProducts = products.map(productForJson);
       <section class="space-y-2 lg:col-span-7" aria-live="polite">
         <ul class="border-y" style="border-color: var(--pastel-blue);" data-cart-list></ul>
 
-        <form id="checkout-form" class="hidden space-y-10" data-checkout-form>
+        <form
+          method="post"
+          id="checkout-form"
+          class="hidden space-y-10"
+          data-checkout-form
+          onsubmit="return confirm('¿Seguro que quiere realizar la reserva?');"
+        >
+          <input type="hidden" name="cart_products" id="cart-payload-input" />
+
+          <fieldset class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <label class="block">
+                <span class="text-[11px] uppercase tracking-widest" style="color: var(--faded);"
+                  >Nombre y apellidos</span
+                >
+                <input
+                  required
+                  name="name"
+                  placeholder="Tu nombre"
+                  class="mt-1 w-full border-b bg-transparent py-2 text-sm transition-all duration-300 focus:outline-none focus:ring-2"
+                  style="border-color: var(--pastel-blue); color: var(--ink); --tw-ring-color: var(--pastel-yellow);"
+                />
+              </label>
+            </div>
+          </fieldset>
           <fieldset class="space-y-4">
             <legend class="mb-2 text-xs uppercase tracking-[0.25em]" style="color: var(--faded);"
               >Contacto</legend
@@ -64,28 +153,26 @@ const cartProducts = products.map(productForJson);
               >
               <input
                 type="email"
+                name="email"
                 required
                 placeholder="tu@email.com"
                 class="mt-1 w-full border-b bg-transparent py-2 text-sm transition-all duration-300 focus:outline-none focus:ring-2"
                 style="border-color: var(--pastel-blue); color: var(--ink); --tw-ring-color: var(--pastel-yellow);"
               />
             </label>
-          </fieldset>
-
-          <fieldset class="space-y-4">
-            <div class="grid grid-cols-2 gap-4">
-              <label class="block">
-                <span class="text-[11px] uppercase tracking-widest" style="color: var(--faded);"
-                  >Nombre y apellidos</span
-                >
-                <input
-                  required
-                  placeholder="Tu nombre"
-                  class="mt-1 w-full border-b bg-transparent py-2 text-sm transition-all duration-300 focus:outline-none focus:ring-2"
-                  style="border-color: var(--pastel-blue); color: var(--ink); --tw-ring-color: var(--pastel-yellow);"
-                />
-              </label>
-            </div>
+            <label class="block">
+              <span class="text-[11px] uppercase tracking-widest" style="color: var(--faded);"
+                >Tel&eacute;fono</span
+              >
+              <input
+                type="tel"
+                name="telefono"
+                required
+                placeholder="694 95 95 95"
+                class="mt-1 w-full border-b bg-transparent py-2 text-sm transition-all duration-300 focus:outline-none focus:ring-2"
+                style="border-color: var(--pastel-blue); color: var(--ink); --tw-ring-color: var(--pastel-yellow);"
+              />
+            </label>
           </fieldset>
         </form>
       </section>
@@ -136,7 +223,8 @@ const cartProducts = products.map(productForJson);
           class="pt-6 text-[11px] leading-relaxed"
           style="border-top: 1px solid var(--pastel-blue); color: var(--faded);"
         >
-          Esto solamente efectuará una reserva que se preparará en tienda. NO es una compra, el pedido deberá de recogerse y pagarse en tienda.
+          Esto solamente efectuará una reserva que se preparará en tienda. NO es una compra, el
+          pedido deberá de recogerse y pagarse en tienda.
         </p>
       </aside>
     </div>
@@ -249,6 +337,7 @@ const cartProducts = products.map(productForJson);
     const filled = document.querySelector("[data-cart-filled]");
     const list = document.querySelector("[data-cart-list]");
     const form = document.querySelector("[data-checkout-form]");
+    const payloadInput = document.getElementById("cart-payload-input");
     const primary = document.querySelector("[data-cart-primary]");
     const back = document.querySelector("[data-cart-back]");
     const subtotalNode = document.querySelector("[data-cart-subtotal]");
@@ -273,7 +362,7 @@ const cartProducts = products.map(productForJson);
         (total, row) => total + row.product.price * row.item.quantity,
         0,
       );
-      const total = subtotal ;
+      const total = subtotal;
 
       if (rows.length === 0) step = "cart";
 
@@ -331,17 +420,22 @@ const cartProducts = products.map(productForJson);
         render();
         return;
       }
-      form.requestSubmit();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      payloadInput.value = JSON.stringify(window.SaudadeCart.read());
+
+      if (confirm("¿Seguro que quiere realizar la reserva?")) {
+        form.submit();
+      }
     });
 
     back.addEventListener("click", () => {
       step = "cart";
       render();
-    });
-
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-      alert("Reserva registrada correctamente.");
     });
 
     document.addEventListener("saudade-cart-change", render);

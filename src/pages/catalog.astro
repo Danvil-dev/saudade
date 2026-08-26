@@ -14,11 +14,17 @@ const productsOfCategory = await getProductsOfCategory(selectedCategory);
 <BaseLayout title="Saudade — Tienda" description="Explora nuestro catálogo de productos">
   <main id="main-content">
     <section class="mx-auto max-w-screen-xl px-6 pb-12 pt-20 md:pb-16 md:pt-28">
-      <p class="mb-6 flex items-center gap-3 text-[11px] uppercase tracking-[0.3em]" style="color: var(--faded);">
+      <p
+        class="mb-6 flex items-center gap-3 text-[11px] uppercase tracking-[0.3em]"
+        style="color: var(--faded);"
+      >
         <span class="inline-block h-px w-8" style="background: var(--accent);"></span>
         Catálogo
       </p>
-      <h1 class="max-w-[18ch] text-balance font-serif text-5xl leading-[0.95] md:text-6xl" style="color: var(--ink);">
+      <h1
+        class="max-w-[18ch] text-balance font-serif text-5xl leading-[0.95] md:text-6xl"
+        style="color: var(--ink);"
+      >
         Todo, <span class="italic" style="color: var(--accent);">hecho a medida.</span>
       </h1>
       <p class="mt-6 max-w-[52ch] leading-relaxed" style="color: var(--faded);">
@@ -27,7 +33,11 @@ const productsOfCategory = await getProductsOfCategory(selectedCategory);
     </section>
 
     <div class="mx-auto max-w-screen-xl px-6 pb-32">
-      <section class="pb-12 pt-8" aria-label="Catalogue filters" style="border-top: 2px solid var(--pastel-blue);">
+      <section
+        class="pb-12 pt-8"
+        aria-label="Catalogue filters"
+        style="border-top: 2px solid var(--pastel-blue);"
+      >
         <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div class="space-y-4">
             <h2 class="text-xs uppercase tracking-[0.25em]" style="color: var(--faded);">
@@ -55,7 +65,10 @@ const productsOfCategory = await getProductsOfCategory(selectedCategory);
               }
             </div>
           </div>
-          <label class="flex items-center gap-3 text-xs uppercase tracking-widest" style="color: var(--faded);">
+          <label
+            class="flex items-center gap-3 text-xs uppercase tracking-widest"
+            style="color: var(--faded);"
+          >
             Ordenar
             <select
               class="border-b bg-transparent py-1 pr-6 focus:outline-none"
@@ -70,7 +83,11 @@ const productsOfCategory = await getProductsOfCategory(selectedCategory);
         </div>
       </section>
 
-      <p class="hidden py-32 text-center font-serif text-2xl" style="color: var(--faded);" data-catalog-empty>
+      <p
+        class="hidden py-32 text-center font-serif text-2xl"
+        style="color: var(--faded);"
+        data-catalog-empty
+      >
         No hay productos que coincidan.
       </p>
       <div
@@ -171,3 +188,14 @@ const productsOfCategory = await getProductsOfCategory(selectedCategory);
     </script>
   </main>
 </BaseLayout>
+
+<script is:inline>
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get("booking") === "success") {
+    if (typeof window.SaudadeCart?.clear === "function") {
+      window.SaudadeCart.clear();
+    } else {
+      localStorage.removeItem("saudade:cart");
+    }
+  }
+</script>

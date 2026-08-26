@@ -81,6 +81,10 @@ const ogImage = image
           const cart = this.read().filter((item) => item.name !== name);
           this.save(cart);
         },
+        clear() {
+          localStorage.removeItem(CART_KEY);
+          document.dispatchEvent(new CustomEvent("saudade-cart-change"));
+        },
       };
     </script>
   </head>

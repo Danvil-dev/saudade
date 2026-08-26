@@ -316,8 +316,9 @@ export const getItemsOfBooking = async (supabaseClient: any, bookingId: number) 
   return data || [];
 };
 
-export function productForJson(product: Product) {
+export function productForJson(product: any) {
   return {
+    id: product.id,
     name: product.name,
     description: product.description,
     category: product.category,
