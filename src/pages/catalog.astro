@@ -65,6 +65,11 @@ const productsOfCategory = await getProductsOfCategory(selectedCategory);
               }
             </div>
           </div>
+          <div class="border rounded-md border-gray-500 w-xl flex flex-row">
+          <img src="/src/assets/lupa.png" alt="lupa" width="30px" height="30px" class="m-2"> 
+          <label for="buscador"></label>
+          <input type="text" id="buscador" data-catalog-search placeholder="Libreta.." class="p-1.5 rounded-md w-full">
+          </div>
           <label
             class="flex items-center gap-3 text-xs uppercase tracking-widest"
             style="color: var(--faded);"
@@ -88,7 +93,7 @@ const productsOfCategory = await getProductsOfCategory(selectedCategory);
         style="color: var(--faded);"
         data-catalog-empty
       >
-        No hay productos que coincidan.
+        No hay productos que coincidan con la categoria y/o nombre proporcionados.
       </p>
       <div
         class="grid grid-cols-1 gap-x-8 gap-y-16 md:grid-cols-2 lg:grid-cols-3"
@@ -98,6 +103,7 @@ const productsOfCategory = await getProductsOfCategory(selectedCategory);
           products.map((product, index) => (
             <article
               data-catalog-item
+              data-name={product.name.toLowerCase()}
               data-category={product.category}
               data-material={product.material}
               data-price={product.price}
@@ -142,12 +148,16 @@ const productsOfCategory = await getProductsOfCategory(selectedCategory);
       const countLabel = document.querySelector("[data-catalog-count-label]");
       const empty = document.querySelector("[data-catalog-empty]");
       const sort = document.querySelector("[data-catalog-sort]");
+      const searchInput = document.querySelector("[data-catalog-search]");
 
-      const filters = { category: "all" };
+      const filters = { category: "all", search: ""};
 
       function applyFilters() {
         const visible = items.filter((item) => {
-          return filters.category === "all" || item.dataset.category === filters.category;
+          const matchesCategory = filters.category === "all" || item.dataset.category === filters.category;
+          const matchesName = item.dataset.name ? item.dataset.name.includes(filters.search.toLowerCase()) : true;
+
+          return matchesCategory && matchesName
         });
 
         visible.sort((a, b) => {
@@ -167,6 +177,11 @@ const productsOfCategory = await getProductsOfCategory(selectedCategory);
         empty.classList.toggle("hidden", visible.length > 0);
         grid.classList.toggle("hidden", visible.length === 0);
       }
+
+      searchInput?.addEventListener("input", (e) => {
+        filters.search = e.target.value.trim();
+        applyFilters();
+      })
 
       document.querySelectorAll("[data-filter-group]").forEach((group) => {
         group.addEventListener("click", (event) => {
