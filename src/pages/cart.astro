@@ -8,10 +8,13 @@ import {
   supabase,
   type ItemsBooking,
 } from "@/db/dbFunctions.js";
+import { sendBookingConfirmation } from "../../utils/mailer.ts";
+
 
 const products = await getProducts();
 const cartProducts = products.map(productForJson);
 let serverError = "";
+let errorMessage = "";
 
 if (Astro.request.method === "POST") {
   try {
@@ -29,6 +32,7 @@ if (Astro.request.method === "POST") {
     const dbProductsMap = new Map(products.map((product) => [product.name, product]));
     let totalPrice = 0;
     const itemsToBook: ItemsBooking[] = [];
+    const emailItems: Array<{ name: string; quantity: number; price: number }> = [];
 
     for (const item of userCart) {
       const product = dbProductsMap.get(item.name);
@@ -39,23 +43,37 @@ if (Astro.request.method === "POST") {
           quantity: item.quantity,
           price: product.price,
         });
+        emailItems.push({
+          name: product.name,
+          quantity: item.quantity,
+          price: product.price,
+        });
       }
     }
 
-    if (itemsToBook.length > 0) {
-      const result = await createBooking(
-        supabase,
-        { total_price: totalPrice, paid: false, name, email, number: phoneFormatted },
-        itemsToBook,
-      );
+    const emailRegEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const telefonoClean = telefono.replace(/\D/g, "");
 
-      if (result.success) {
-        return Astro.redirect("/catalog?booking=success");
+    if (name.length > 0 && emailRegEx.test(email) && telefonoClean.length == 9) {
+      if (itemsToBook.length > 0) {
+        const result = await createBooking(
+          supabase,
+          { total_price: totalPrice, paid: false, name, email, number: phoneFormatted },
+          itemsToBook,
+        );
+
+        if (result.success) {
+          await sendBookingConfirmation(email, name, totalPrice, emailItems);
+          return Astro.redirect("/catalog?booking=success");
+        } else {
+          serverError = result.error || "No se pudo procesar la reserva en la base de datos.";
+        }
       } else {
-        serverError = result.error || "No se pudo procesar la reserva en la base de datos.";
+        serverError = "El carrito no contiene productos válidos.";
       }
     } else {
-      serverError = "El carrito no contiene productos válidos.";
+      serverError =
+        "Por favor, rellena todos los campos correctamente. El teléfono debe tener 9 dígitos.";
     }
   } catch (e: any) {
     console.error("Error al hacer la reserva:", e);
@@ -202,6 +220,8 @@ if (Astro.request.method === "POST") {
           </div>
         </div>
         <div class="space-y-3">
+          {errorMessage && <p class="text-red-600">{errorMessage}</p>}
+
           <button
             type="button"
             class="w-full rounded-full py-4 text-sm font-medium transition-all duration-300 hover:scale-[1.02]"
@@ -209,14 +229,6 @@ if (Astro.request.method === "POST") {
             data-cart-primary
           >
             Continuar con los datos
-          </button>
-          <button
-            type="button"
-            class="hidden w-full text-[11px] uppercase tracking-widest underline underline-offset-4 transition-all duration-300 hover:translate-x-1"
-            style="color: var(--faded);"
-            data-cart-back
-          >
-            Volver a la selección
           </button>
         </div>
         <p
@@ -321,124 +333,168 @@ if (Astro.request.method === "POST") {
       ))
     }
   </main>
+</BaseLayout>
 
-  <script
-    is:inline
-    type="application/json"
-    id="cart-products"
-    set:html={JSON.stringify(cartProducts)}
-  />
+<script
+  is:inline
+  type="application/json"
+  id="cart-products"
+  set:html={JSON.stringify(cartProducts)}
+/>
 
-  <script is:inline>
-    const productList = JSON.parse(document.getElementById("cart-products").textContent);
-    const productsByName = new Map(productList.map((product) => [product.name, product]));
-    const title = document.querySelector("[data-cart-title]");
-    const empty = document.querySelector("[data-cart-empty]");
-    const filled = document.querySelector("[data-cart-filled]");
-    const list = document.querySelector("[data-cart-list]");
-    const form = document.querySelector("[data-checkout-form]");
-    const payloadInput = document.getElementById("cart-payload-input");
-    const primary = document.querySelector("[data-cart-primary]");
-    const back = document.querySelector("[data-cart-back]");
-    const subtotalNode = document.querySelector("[data-cart-subtotal]");
-    const totalNode = document.querySelector("[data-cart-total]");
-    const stepCart = document.querySelector('[data-cart-step="cart"]');
-    const stepDetails = document.querySelector('[data-cart-step="details"]');
-    let step = "cart";
+<script>
+  import Swal from "sweetalert2";
 
-    function formatPrice(amount) {
-      return `${amount.toFixed(2)} €`;
+  // Declaración de interfaces y tipos globales para TypeScript
+  interface CartItem {
+    name: string;
+    quantity: number;
+  }
+
+  interface Product {
+    id: string | number;
+    name: string;
+    price: number;
+    category: string;
+    image: string;
+  }
+
+  declare global {
+    interface Window {
+      SaudadeCart: {
+        read: () => CartItem[];
+        setQuantity: (name: string, quantity: number) => void;
+        remove: (name: string) => void;
+      };
     }
+  }
 
-    function knownRows() {
-      return window.SaudadeCart.read()
-        .map((item) => ({ item, product: productsByName.get(item.name) }))
-        .filter((row) => row.product);
-    }
+  const cartProductsEl = document.getElementById("cart-products");
+  const productList: Product[] = cartProductsEl
+    ? JSON.parse(cartProductsEl.textContent || "[]")
+    : [];
+  const productsByName = new Map<string, Product>(
+    productList.map((product) => [product.name, product]),
+  );
+  const title = document.querySelector("[data-cart-title]");
+  const empty = document.querySelector("[data-cart-empty]");
+  const filled = document.querySelector("[data-cart-filled]");
+  const list = document.querySelector("[data-cart-list]");
+  const form = document.querySelector("[data-checkout-form]");
+  const payloadInput = document.getElementById("cart-payload-input");
+  const primary = document.querySelector("[data-cart-primary]");
+  const back = document.querySelector("[data-cart-back]");
+  const subtotalNode = document.querySelector("[data-cart-subtotal]");
+  const totalNode = document.querySelector("[data-cart-total]");
+  const stepCart = document.querySelector('[data-cart-step="cart"]');
+  const stepDetails = document.querySelector('[data-cart-step="details"]');
+  let step = "cart";
 
-    function render() {
-      const rows = knownRows();
-      const subtotal = rows.reduce(
-        (total, row) => total + row.product.price * row.item.quantity,
-        0,
-      );
-      const total = subtotal;
+  function formatPrice(amount) {
+    return `${amount.toFixed(2)} €`;
+  }
 
-      if (rows.length === 0) step = "cart";
+  function knownRows() {
+    return window.SaudadeCart.read()
+      .map((item) => ({ item, product: productsByName.get(item.name) }))
+      .filter((row) => row.product);
+  }
 
-      title.textContent =
-        rows.length === 0
-          ? "Vacía por ahora."
-          : step === "cart"
-            ? "Revisa tu selección."
-            : "Unos datos más.";
-      empty.classList.toggle("hidden", rows.length !== 0);
-      filled.classList.toggle("hidden", rows.length === 0);
-      list.classList.toggle("hidden", step !== "cart");
-      form.classList.toggle("hidden", step !== "details");
-      primary.textContent =
-        step === "cart" ? "Continuar con los datos" : `Reservar · ${formatPrice(total)}`;
+  function render() {
+    const rows = knownRows();
+    const subtotal = rows.reduce((total, row) => total + row.product.price * row.item.quantity, 0);
+    const total = subtotal;
+
+    if (rows.length === 0) step = "cart";
+
+    title.textContent =
+      rows.length === 0
+        ? "Vacía por ahora."
+        : step === "cart"
+          ? "Revisa tu selección."
+          : "Unos datos más.";
+    empty.classList.toggle("hidden", rows.length !== 0);
+    filled.classList.toggle("hidden", rows.length === 0);
+    list.classList.toggle("hidden", step !== "cart");
+    form.classList.toggle("hidden", step !== "details");
+    primary.textContent =
+      step === "cart" ? "Continuar con los datos" : `Reservar · ${formatPrice(total)}`;
+
+    if (back) {
       back.classList.toggle("hidden", step !== "details");
-
-      if (stepCart) stepCart.style.color = step === "cart" ? "var(--ink)" : "var(--faded)";
-      if (stepDetails) stepDetails.style.color = step === "details" ? "var(--ink)" : "var(--faded)";
-
-      subtotalNode.textContent = formatPrice(subtotal);
-      totalNode.textContent = formatPrice(total);
-
-      list.replaceChildren();
-      rows.forEach(({ item, product }) => {
-        const template = document.querySelector(
-          `template[data-product-template="${CSS.escape(item.name)}"]`,
-        );
-        if (!template) return;
-        const row = template.content.firstElementChild.cloneNode(true);
-        row.querySelector("[data-row-quantity]").textContent = String(item.quantity);
-        row.querySelector("[data-row-line-price]").textContent = formatPrice(
-          product.price * item.quantity,
-        );
-        row
-          .querySelector('[data-cart-action="decrease"]')
-          .addEventListener("click", () =>
-            window.SaudadeCart.setQuantity(item.name, item.quantity - 1),
-          );
-        row
-          .querySelector('[data-cart-action="increase"]')
-          .addEventListener("click", () =>
-            window.SaudadeCart.setQuantity(item.name, item.quantity + 1),
-          );
-        row
-          .querySelector('[data-cart-action="remove"]')
-          .addEventListener("click", () => window.SaudadeCart.remove(item.name));
-        list.appendChild(row);
-      });
     }
 
-    primary.addEventListener("click", () => {
-      if (step === "cart") {
-        step = "details";
-        render();
-        return;
-      }
+    if (stepCart) stepCart.style.color = step === "cart" ? "var(--ink)" : "var(--faded)";
+    if (stepDetails) stepDetails.style.color = step === "details" ? "var(--ink)" : "var(--faded)";
 
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
+    subtotalNode.textContent = formatPrice(subtotal);
+    totalNode.textContent = formatPrice(total);
 
-      payloadInput.value = JSON.stringify(window.SaudadeCart.read());
+    list.replaceChildren();
+    rows.forEach(({ item, product }) => {
+      const template = document.querySelector(
+        `template[data-product-template="${CSS.escape(item.name)}"]`,
+      );
+      if (!template) return;
+      const row = template.content.firstElementChild.cloneNode(true);
+      row.querySelector("[data-row-quantity]").textContent = String(item.quantity);
+      row.querySelector("[data-row-line-price]").textContent = formatPrice(
+        product.price * item.quantity,
+      );
+      row
+        .querySelector('[data-cart-action="decrease"]')
+        .addEventListener("click", () =>
+          window.SaudadeCart.setQuantity(item.name, item.quantity - 1),
+        );
+      row
+        .querySelector('[data-cart-action="increase"]')
+        .addEventListener("click", () =>
+          window.SaudadeCart.setQuantity(item.name, item.quantity + 1),
+        );
+      row
+        .querySelector('[data-cart-action="remove"]')
+        .addEventListener("click", () => window.SaudadeCart.remove(item.name));
+      list.appendChild(row);
+    });
+  }
 
-      if (confirm("¿Seguro que quiere realizar la reserva?")) {
+  primary.addEventListener("click", () => {
+    if (step === "cart") {
+      step = "details";
+      render();
+      return;
+    }
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    payloadInput.value = JSON.stringify(window.SaudadeCart.read());
+
+    Swal.fire({
+      title: "¿Confirmar reserva?",
+      text: "Recuerda que el pedido deberá recogerse y pagarse en la tienda.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, reservar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#18181b",
+      cancelButtonColor: "#9ca3af",
+    }).then((result) => {
+      if (result.isConfirmed) {
         form.submit();
       }
     });
+  });
 
+  if (back) {
     back.addEventListener("click", () => {
       step = "cart";
       render();
     });
+  }
 
-    document.addEventListener("saudade-cart-change", render);
-    render();
-  </script>
-</BaseLayout>
+  document.addEventListener("saudade-cart-change", render);
+  render();
+</script>

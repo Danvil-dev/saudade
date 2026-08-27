@@ -17,11 +17,13 @@
     "@tailwindcss/postcss": "^4.3.1",
     "accessible-astro-components": "^5.7.1",
     "astro": "^6.4.8",
+    "nodemailer": "^9.0.5",
     "sweetalert2": "^11.26.25",
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "@types/nodemailer": "^8.0.1",
     "prettier": "^3.7.3",
     "typescript": "^6.0.3"
   }

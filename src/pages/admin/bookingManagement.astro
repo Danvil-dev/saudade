@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getSupabaseServer } from "@/db/supabaseServer";
-import { getBookings, editBooking, deleteBooking } from "@/db/dbFunctions.js";
+import { getBookings, editBooking, deleteBooking, autoDeletePaidBokings } from "@/db/dbFunctions.js";
 
 export const prerender = false;
 const supabase = getSupabaseServer(Astro);
@@ -13,6 +13,10 @@ const {
 if (!user || error) {
   return Astro.redirect("/login");
 }
+
+// Eliminar automaticamente las reservas pagadas con más de 30 dias
+
+// await autoDeletePaidBokings(supabase, 30) 
 
 const statusFilter = Astro.url.searchParams.get("status") || "all";
 

@@ -199,3 +199,25 @@ const productsOfCategory = await getProductsOfCategory(selectedCategory);
     }
   }
 </script>
+<script>
+  import Swal from "sweetalert2";
+
+  // Comprobar si venimos de hacer una reserva
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  if (urlParams.get("booking") === "success") {
+    Swal.fire({
+      icon: "success",
+      title: "¡Reserva realizada!",
+      text: "Reserva registrada. Compruebe su correo con la confirmación (revise la bandeja de spam).",
+      confirmButtonColor: "#18181b",
+    });
+
+    if (window.SaudadeCart) {
+      localStorage.removeItem("saudade:cart"); // O la clave que uses para guardar la cesta
+    }
+
+    // Limpiar el parámetro de la URL sin recargar la página
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+</script>
