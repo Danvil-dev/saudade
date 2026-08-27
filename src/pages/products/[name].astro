@@ -76,7 +76,7 @@ const productUrl = new URL(`/products/${product.name}`, Astro.site ?? Astro.url.
           <button
             type="button"
             data-add-to-cart={product.name}
-            class="w-full rounded-full bg-ink py-4 text-sm font-medium text-[var(--color-base)] ring-1 ring-ink transition-all hover:bg-accent hover:ring-accent active:scale-[0.98]"
+            class="w-full rounded-full bg-ink py-4 text-sm font-medium text-[var(--color-base)] ring-1 ring-ink transition-all hover:bg-accent hover:ring-accent active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50"
           >
             Añadir al carrito
           </button>
@@ -128,19 +128,70 @@ const productUrl = new URL(`/products/${product.name}`, Astro.site ?? Astro.url.
       })}
     />
     <script is:inline>
+      import { check } from "astro:schema";
+      import { isGetAccessor } from "typescript";
+
       const addButton = document.querySelector("[data-add-to-cart]");
       if (addButton) {
         const originalText = addButton.textContent;
-        let timer;
         addButton.addEventListener("click", () => {
           window.SaudadeCart.add(addButton.dataset.addToCart, 1);
-          addButton.textContent = "Añadido a tu cesta →";
-          window.clearTimeout(timer);
-          timer = window.setTimeout(() => {
-            addButton.textContent = originalText;
-          }, 1800);
+          addButton.textContent = "Añadido a tu cesta";
+          addButton.disabled = true; // Asignación directa de la propiedad
         });
       }
     </script>
   </main>
 </BaseLayout>
+
+<script is:inline>
+  function checkCart() {
+    const addButton = document.querySelector("[data-add-to-cart]");
+    if (!addButton) return;
+
+    const productName = addButton.dataset.addToCart;
+
+    // Leer directamente de localStorage para evitar esperas de carga
+    const rawCart = localStorage.getItem("saudade:cart");
+    let cart = [];
+    try {
+      cart = rawCart ? JSON.parse(rawCart) : [];
+    } catch (e) {
+      cart = [];
+    }
+
+    const isInCart = cart.some((item) => item.name === productName);
+
+    if (isInCart) {
+      addButton.textContent = "Este objeto ya está en el carrito";
+      addButton.disabled = true;
+    } else {
+      addButton.textContent = "Añadir al carrito ->";
+      addButton.disabled = false;
+    }
+  }
+
+  // Ejecución inmediata al cargar la página
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", checkCart);
+  } else {
+    checkCart();
+  }
+
+  // Evento al pulsar el botón
+  addButton = document.querySelector("[data-add-to-cart]");
+  if (addButton) {
+    addButton.addEventListener("click", () => {
+      if (window.SaudadeCart) {
+        window.SaudadeCart.add(addButton.dataset.addToCart, 1);
+      }
+      checkCart();
+    });
+  }
+
+  window.addEventListener("pageshow", checkCart);
+
+  // Escuchar cambios de estado o transiciones de Astro
+  document.addEventListener("saudade-cart-change", checkCart);
+  document.addEventListener("astro:page-load", checkCart);
+</script>
