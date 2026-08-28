@@ -1,38 +1,48 @@
 import { success } from "astro:schema";
 import nodemailer from "nodemailer";
 
-
 // Trnasporte de gmail
 const transporter = nodemailer.createTransport({
-service: "gmail",
-auth: {
+  service: "gmail",
+  auth: {
     user: import.meta.env.GMAIL_USER,
     pass: import.meta.env.GMAIL_PASS,
-}
+  },
 });
 
 interface EmailItem {
-    name: string, 
-    quantity: number,
-    price: number
+  name: string; // Nombre del producto
+  quantity: number; // Cantidad reservada
+  price: number; // Precio unitario
 }
 
-
+/**
+ * @function sendBookingConfirmation
+ * @description Prepara el email de confirmación al hacer una reserva
+ * @param email Email de la persona receptora
+ * @param name Nombre de la persona receptora
+ * @param total Precio total de la reserva
+ * @param items Lista de productos de la reserva
+ * @returns
+ */
 export async function sendBookingConfirmation(
-    email: string,
-    name: string,
-    total: number,
-    items: EmailItem[]
+  email: string,
+  name: string,
+  total: number,
+  items: EmailItem[],
 ) {
   try {
-    const productsHTML = items.map((item) => 
-      `
+    const productsHTML = items
+      .map(
+        (item) =>
+          `
       <li style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #e4e4e7;">
         <span style="font-size: 16px;"><strong>${item.quantity}x ${item.name}</strong></span><br>
         <span style="color: #52525b; font-size: 14px;">Subtotal: ${(item.price * item.quantity).toFixed(2)} €</span>
       </li>
-      `
-    ).join ();
+      `,
+      )
+      .join();
 
     const info = await transporter.sendMail({
       from: `"Saudade Tienda" <${import.meta.env.GMAIL_USER}>`,

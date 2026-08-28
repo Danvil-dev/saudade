@@ -2,6 +2,9 @@ import { createServerClient, parseCookieHeader } from "@supabase/ssr";
 
 export const getSupabaseServer = (context) => {
   return createServerClient(
+    // Crea una instancia de cliente de supabase
+
+    // Conseguimos las credenciales
     import.meta.env.PUBLIC_SUPABASE_URL,
     import.meta.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY,
 
@@ -19,7 +22,7 @@ export const getSupabaseServer = (context) => {
           });
         },
         cookieOptions: {
-          maxAge: 60 * 60 * 24 * 7, // 7 días 
+          maxAge: 60 * 60 * 24 * 7, // 7 días
           path: "/",
           sameSite: "lax",
           secure: true,
